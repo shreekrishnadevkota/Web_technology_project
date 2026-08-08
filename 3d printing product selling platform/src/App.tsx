@@ -9,7 +9,7 @@ function App() {
   return (
     <>
       <Btn btnTitle="CLICK" />
-      <ProductCard/>
+      <ProductCard productName='pikachu panting' price="Rs.100"/>
       
     </>
   )
