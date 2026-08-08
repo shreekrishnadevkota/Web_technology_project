@@ -1,13 +1,15 @@
-import { useState } from 'react'
+// import { useState } from 'react'
 import './App.css'
 import Btn from './component/button'
+import ProductCard from './component/ProductCard'
 
 function App() {
-  const [count, setCount] = useState(0)
+  // const [count, setCount] = useState(0)
 
   return (
     <>
-      <Btn btnTitle="click-Me" />
+      <Btn btnTitle="CLICK" />
+      <ProductCard/>
       
     </>
   )
