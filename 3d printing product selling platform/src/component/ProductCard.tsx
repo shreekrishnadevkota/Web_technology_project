@@ -7,7 +7,7 @@ const ProductCard = ({productName="defult_product_name", price="$00.0"}: {produc
       {/* Product Image */}
       <div className="w-[288px] h-[288px] rounded-[16px] overflow-hidden">
         <img
-          src="../public/641968.jpg"
+          src="./public/641968.jpg"
           alt="Realistic Pikachu"
           className="w-full h-full object-cover"
         />
@@ -25,13 +25,13 @@ const ProductCard = ({productName="defult_product_name", price="$00.0"}: {produc
       </div>
 
       {/* Bottom Buttons */}
-      <div className="flex items-center gap-[12px]">
+      <div className="flex items-center justify-between gap-[15px]">
 
         {/* Add to Cart */}
-        <button
+       <button
           className="
-            w-[216px]
             h-[48px]
+            w-[216px]
             rounded-[24px]
             bg-indigo-600
             text-white
@@ -39,11 +39,12 @@ const ProductCard = ({productName="defult_product_name", price="$00.0"}: {produc
             flex
             items-center
             justify-center
+            px-[15px]
             hover:bg-indigo-700
             transition
           "
         >
-          Add to cart
+          Add to Cart
         </button>
 
         {/* Favorite Button */}

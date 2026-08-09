@@ -1,9 +1,26 @@
-// import React from 'react'
+import React from 'react'
 
 const Btn = ({btnTitle="Button"}: {btnTitle: string}) => {
   return (
     <div>
-        <button className='bg-[#4F46E5] h-48px  text-white rounded-2xl px-2 py-1'>{btnTitle}</button>
+         <button
+          className="
+            h-[48px]
+             w-[216px]
+            rounded-[24px]
+            bg-indigo-600
+            text-white
+            text-[16px]
+            flex
+            items-center
+            justify-center
+            px-[15px]
+            hover:bg-indigo-700
+            transition
+          "
+        >
+          {btnTitle}
+        </button>
       
     </div>
   )
