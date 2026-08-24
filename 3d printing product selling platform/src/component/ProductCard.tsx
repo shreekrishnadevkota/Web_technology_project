@@ -1,4 +1,3 @@
-import React from "react";
 
 const ProductCard = ({productName="defult_product_name", price="$00.0"}: {productName: string, price: string}) => {
   return (

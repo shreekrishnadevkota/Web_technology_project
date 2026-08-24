@@ -1,15 +1,44 @@
-// import { useState } from 'react'
-import "./App.css";
-import Btn from "./component/button";
-import ProductCard from "./component/ProductCard";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+
+import NavBar from "./component/NavBar";
+
+import Home from "./pages/Home";
+import Shop from "./pages/Shop";
+import Categories from "./pages/Categories";
+import About from "./pages/About";
+import Cart from "./pages/Cart";
+import Profile from "./pages/Profile";
 
 function App() {
-  // const [count, setCount] = useState(0)
-
   return (
     <>
-      <Btn btnTitle="hello" />
-      <ProductCard productName="pikachu" price="Rs.100"/>
+    <BrowserRouter>
+
+      {/* Navbar will appear on every page */}
+      <NavBar />
+
+      {/* Page Routes */}
+      <Routes>
+        <Route path="/" element={<Home />} />
+
+        <Route path="/shop" element={<Shop />} />
+
+        <Route
+          path="/categories"
+          element={<Categories />}
+        />
+
+        <Route path="/about" element={<About />} />
+
+        <Route path="/cart" element={<Cart />} />
+
+        <Route
+          path="/profile"
+          element={<Profile />}
+        />
+      </Routes>
+
+    </BrowserRouter>
     </>
   );
 }

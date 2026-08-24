@@ -1,4 +1,3 @@
-import React from 'react'
 
 const Btn = ({btnTitle="Button"}: {btnTitle: string}) => {
   return (
