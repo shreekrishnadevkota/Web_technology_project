@@ -1,5 +1,6 @@
 import { useRef } from "react";
 import { Link } from "react-router-dom";
+import ProductCard from "../component/ProductCard";
 
 interface Product {
   id: number;
@@ -9,49 +10,17 @@ interface Product {
   category?: string;
 }
 
-function ProductCard({ product }: { product: Product }) {
-  return (
-    <div className="min-w-[220px] overflow-hidden rounded-xl border border-gray-200 bg-white">
-      {/* Product Image */}
-      <div className="h-48 overflow-hidden bg-gray-100">
-        <img
-          src={product.image}
-          alt={product.name}
-          className="h-full w-full object-cover transition duration-300 hover:scale-105"
-        />
-      </div>
-
-      {/* Product Information */}
-      <div className="p-4">
-        <p className="text-sm text-gray-500">
-          {product.category}
-        </p>
-
-        <h3 className="mt-1 font-semibold">
-          {product.name}
-        </h3>
-
-        <div className="mt-3 flex items-center justify-between">
-          <span className="font-bold">
-            Rs. {product.price}
-          </span>
-
-          <button className="rounded-lg bg-black px-3 py-2 text-sm text-white hover:bg-gray-800">
-            Add
-          </button>
-        </div>
-      </div>
-    </div>
-  );
+interface ProductSectionProps {
+  title: string;
+  description: string;
+  products: Product[];
 }
 
 function ProductSection({
   title,
+  description,
   products,
-}: {
-  title: string;
-  products: Product[];
-}) {
+}: ProductSectionProps) {
   const scrollRef = useRef<HTMLDivElement>(null);
 
   const scrollLeft = () => {
@@ -69,47 +38,53 @@ function ProductSection({
   };
 
   return (
-    <section className="mt-12">
-      {/* Section Header */}
-      <div className="mb-5 flex items-center justify-between">
+    <section className="mt-14">
+      {/* Section Heading */}
+      <div className="mb-6 flex items-end justify-between">
         <div>
-          <h2 className="text-2xl font-bold">
+          <p className="text-sm font-semibold uppercase tracking-wider text-blue-600">
+            Explore
+          </p>
+
+          <h2 className="mt-1 text-2xl font-bold sm:text-3xl">
             {title}
           </h2>
 
-          <p className="mt-1 text-sm text-gray-500">
-            Explore our latest collection
+          <p className="mt-2 text-sm text-gray-500">
+            {description}
           </p>
         </div>
 
-        {/* Arrow Buttons */}
+        {/* Slider Buttons */}
         <div className="flex gap-2">
           <button
             onClick={scrollLeft}
-            className="flex h-10 w-10 items-center justify-center rounded-full border border-gray-300 text-xl hover:bg-gray-100"
+            className="flex h-10 w-10 items-center justify-center rounded-full border border-gray-300 bg-white text-lg transition hover:bg-black hover:text-white"
           >
             ←
           </button>
 
           <button
             onClick={scrollRight}
-            className="flex h-10 w-10 items-center justify-center rounded-full border border-gray-300 text-xl hover:bg-gray-100"
+            className="flex h-10 w-10 items-center justify-center rounded-full border border-gray-300 bg-white text-lg transition hover:bg-black hover:text-white"
           >
             →
           </button>
         </div>
       </div>
 
-      {/* Horizontal Product List */}
+      {/* Product Slider */}
       <div
         ref={scrollRef}
         className="flex gap-4 overflow-x-auto scroll-smooth pb-4"
       >
         {products.map((product) => (
-          <ProductCard
+          <div
             key={product.id}
-            product={product}
-          />
+            className="min-w-[220px] sm:min-w-[240px]"
+          >
+            <ProductCard product={product} />
+          </div>
         ))}
       </div>
     </section>
@@ -117,7 +92,6 @@ function ProductSection({
 }
 
 function Home() {
-  /* Famous Products */
   const famousProducts: Product[] = [
     {
       id: 1,
@@ -161,7 +135,6 @@ function Home() {
     },
   ];
 
-  /* Trending Products */
   const trendingProducts: Product[] = [
     {
       id: 6,
@@ -205,29 +178,28 @@ function Home() {
     },
   ];
 
-  /* Material Products */
   const materialProducts: Product[] = [
     {
       id: 11,
-      name: "PLA Material Product",
+      name: "PLA Printed Product",
       price: 900,
-      category: "PLA",
+      category: "PLA Material",
       image:
         "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158",
     },
     {
       id: 12,
-      name: "PETG Material Product",
+      name: "PETG Printed Product",
       price: 1300,
-      category: "PETG",
+      category: "PETG Material",
       image:
         "https://images.unsplash.com/photo-1581092160562-40aa08e78837",
     },
     {
       id: 13,
-      name: "ABS Material Product",
+      name: "ABS Printed Product",
       price: 1500,
-      category: "ABS",
+      category: "ABS Material",
       image:
         "https://images.unsplash.com/photo-1531297484001-80022131f5a1",
     },
@@ -235,13 +207,12 @@ function Home() {
       id: 14,
       name: "Flexible TPU Product",
       price: 1100,
-      category: "TPU",
+      category: "TPU Material",
       image:
         "https://images.unsplash.com/photo-1518770660439-4636190af475",
     },
   ];
 
-  /* Best Selling Products */
   const bestSellingProducts: Product[] = [
     {
       id: 15,
@@ -277,7 +248,7 @@ function Home() {
     },
     {
       id: 19,
-      name: "Plant Pot",
+      name: "Creative Plant Pot",
       price: 700,
       category: "Decoration",
       image:
@@ -288,101 +259,213 @@ function Home() {
   return (
     <main className="min-h-screen bg-gray-50">
 
-      {/* HERO SECTION */}
-      <section className="bg-black px-4 py-16 text-white">
-        <div className="mx-auto grid max-w-6xl items-center gap-10 md:grid-cols-2">
+      {/* ================= HERO SECTION ================= */}
 
-          {/* Hero Text */}
+      <section className="relative overflow-hidden bg-gradient-to-br from-gray-950 via-gray-900 to-blue-950 px-4 py-16 text-white sm:py-20">
+        
+        {/* Background Decoration */}
+        <div className="absolute -left-20 top-10 h-72 w-72 rounded-full bg-blue-600 opacity-20 blur-3xl"></div>
+
+        <div className="absolute -right-20 bottom-0 h-80 w-80 rounded-full bg-purple-600 opacity-20 blur-3xl"></div>
+
+        <div className="relative mx-auto grid max-w-6xl items-center gap-12 lg:grid-cols-2">
+
+          {/* Hero Content */}
           <div>
-            <p className="mb-3 text-sm font-semibold text-gray-400">
-              CUSTOM 3D PRINTING PRODUCTS
-            </p>
+            {/* Small Badge */}
+            <div className="inline-flex items-center gap-2 rounded-full border border-gray-700 bg-white/10 px-4 py-2 text-sm text-gray-300 backdrop-blur">
+              ✨ Creative 3D Printing Marketplace
+            </div>
 
-            <h1 className="text-4xl font-bold leading-tight sm:text-5xl lg:text-6xl">
-              Turn Your Ideas Into Reality
+            {/* Heading */}
+            <h1 className="mt-6 text-4xl font-bold leading-tight sm:text-5xl lg:text-6xl">
+              Turn Your
+              <span className="block bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
+                Imagination Into Reality
+              </span>
             </h1>
 
-            <p className="mt-5 max-w-xl text-gray-300">
-              Discover unique, creative and customizable products made with
-              modern 3D printing technology.
+            {/* Description */}
+            <p className="mt-6 max-w-xl text-base leading-7 text-gray-300 sm:text-lg">
+              Discover unique products created with modern 3D printing
+              technology. From creative home decorations to custom designs,
+              everything starts with an idea.
             </p>
 
-            <div className="mt-7 flex gap-4">
+            {/* Buttons */}
+            <div className="mt-8 flex flex-wrap gap-4">
               <Link
                 to="/shop"
-                className="rounded-lg bg-white px-6 py-3 font-medium text-black hover:bg-gray-200"
+                className="rounded-xl bg-white px-6 py-3 font-semibold text-black transition hover:scale-105 hover:bg-gray-200"
               >
-                Shop Now
+                Explore Products →
               </Link>
 
               <Link
                 to="/categories"
-                className="rounded-lg border border-gray-500 px-6 py-3 font-medium hover:bg-gray-900"
+                className="rounded-xl border border-gray-600 px-6 py-3 font-semibold text-white transition hover:bg-white/10"
               >
-                Explore Categories
+                Browse Categories
               </Link>
+            </div>
+
+            {/* Statistics */}
+            <div className="mt-10 flex gap-8">
+              <div>
+                <h3 className="text-2xl font-bold">500+</h3>
+                <p className="text-sm text-gray-400">
+                  Unique Products
+                </p>
+              </div>
+
+              <div>
+                <h3 className="text-2xl font-bold">100+</h3>
+                <p className="text-sm text-gray-400">
+                  Happy Customers
+                </p>
+              </div>
+
+              <div>
+                <h3 className="text-2xl font-bold">24/7</h3>
+                <p className="text-sm text-gray-400">
+                  Support
+                </p>
+              </div>
             </div>
           </div>
 
           {/* Hero Image */}
-          <div className="overflow-hidden rounded-2xl">
-            <img
-              src="https://images.unsplash.com/photo-1581092160607-ee22621dd758"
-              alt="3D Printing"
-              className="h-[300px] w-full object-cover md:h-[450px]"
-            />
+          <div className="relative">
+
+            {/* Decorative Card */}
+            <div className="absolute -left-4 top-8 z-10 hidden rounded-xl border border-white/20 bg-white/10 p-4 backdrop-blur md:block">
+              <p className="text-xs text-gray-300">
+                CUSTOM DESIGN
+              </p>
+
+              <p className="mt-1 font-semibold">
+                Made For You
+              </p>
+            </div>
+
+            {/* Main Image */}
+            <div className="overflow-hidden rounded-3xl border border-white/10 shadow-2xl">
+              <img
+                src="https://images.unsplash.com/photo-1581092160607-ee22621dd758"
+                alt="3D Printing"
+                className="h-[350px] w-full object-cover sm:h-[450px]"
+              />
+            </div>
+
+            {/* Bottom Floating Card */}
+            <div className="absolute -bottom-5 right-4 rounded-xl border border-white/20 bg-white/10 p-4 backdrop-blur">
+              <p className="text-xs text-gray-300">
+                CREATE ANYTHING
+              </p>
+
+              <p className="mt-1 font-semibold">
+                Your Idea. Our Print.
+              </p>
+            </div>
+
           </div>
 
         </div>
       </section>
 
-      {/* MAIN CONTENT */}
-      <div className="mx-auto max-w-6xl px-4 py-10">
+      {/* ================= FEATURES ================= */}
 
-        {/* Famous Section */}
+      <section className="border-b border-gray-200 bg-white px-4">
+        <div className="mx-auto grid max-w-6xl grid-cols-1 gap-6 py-8 sm:grid-cols-3">
+
+          <div className="text-center">
+            <h3 className="font-semibold">
+              🚚 Fast Delivery
+            </h3>
+
+            <p className="mt-1 text-sm text-gray-500">
+              Safe and reliable delivery.
+            </p>
+          </div>
+
+          <div className="text-center">
+            <h3 className="font-semibold">
+              🎨 Custom Designs
+            </h3>
+
+            <p className="mt-1 text-sm text-gray-500">
+              Create products your way.
+            </p>
+          </div>
+
+          <div className="text-center">
+            <h3 className="font-semibold">
+              ⭐ Quality Products
+            </h3>
+
+            <p className="mt-1 text-sm text-gray-500">
+              Made with premium materials.
+            </p>
+          </div>
+
+        </div>
+      </section>
+
+      {/* ================= PRODUCT SECTIONS ================= */}
+
+      <div className="mx-auto max-w-6xl px-4 py-8">
+
         <ProductSection
           title="Famous Products"
+          description="Products loved by our customers."
           products={famousProducts}
         />
 
-        {/* Trending Section */}
         <ProductSection
           title="Trending Now"
+          description="Discover what everyone is talking about."
           products={trendingProducts}
         />
 
-        {/* Material Section */}
         <ProductSection
           title="Shop by Material"
+          description="Explore products made from different materials."
           products={materialProducts}
         />
 
-        {/* Best Selling Section */}
         <ProductSection
           title="Best Selling"
+          description="Our most popular products."
           products={bestSellingProducts}
         />
 
       </div>
 
-      {/* CALL TO ACTION */}
-      <section className="bg-black px-4 py-16 text-white">
-        <div className="mx-auto max-w-6xl text-center">
-          <h2 className="text-3xl font-bold sm:text-4xl">
-            Have Your Own Idea?
+      {/* ================= CTA SECTION ================= */}
+
+      <section className="px-4 py-16">
+        <div className="mx-auto max-w-6xl overflow-hidden rounded-3xl bg-gradient-to-r from-blue-600 to-purple-600 px-6 py-14 text-center text-white sm:px-12">
+
+          <p className="text-sm font-semibold uppercase tracking-widest text-blue-100">
+            Custom 3D Printing
+          </p>
+
+          <h2 className="mt-4 text-3xl font-bold sm:text-4xl">
+            Have Something Unique In Mind?
           </h2>
 
-          <p className="mx-auto mt-4 max-w-xl text-gray-400">
-            Create your own custom product and bring your imagination to life
-            with our 3D printing service.
+          <p className="mx-auto mt-4 max-w-2xl text-blue-100">
+            Bring your imagination to life. Create personalized products
+            designed specifically for you.
           </p>
 
           <Link
             to="/shop"
-            className="mt-7 inline-block rounded-lg bg-white px-6 py-3 font-medium text-black hover:bg-gray-200"
+            className="mt-8 inline-block rounded-xl bg-white px-7 py-3 font-semibold text-blue-600 transition hover:scale-105"
           >
-            Create Custom Product
+            Start Creating →
           </Link>
+
         </div>
       </section>
 

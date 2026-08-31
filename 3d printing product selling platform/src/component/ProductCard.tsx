@@ -1,73 +1,51 @@
+interface Product {
+  id: number;
+  name: string;
+  price: number;
+  image: string;
+  category?: string;
+}
 
-const ProductCard = ({productName="defult_product_name", price="$00.0"}: {productName: string, price: string}) => {
+interface ProductCardProps {
+  product: Product;
+}
+
+function ProductCard({ product }: ProductCardProps) {
   return (
-    <div className="w-[320px] h-[460px] bg-white rounded-[24px] p-4 flex flex-col justify-between">
-
+    <div className="overflow-hidden rounded-xl border border-gray-200 bg-white">
+      
       {/* Product Image */}
-      <div className="w-[288px] h-[288px] rounded-[16px] overflow-hidden">
+      <div className="h-48 overflow-hidden bg-gray-100">
         <img
-          src="./public/641968.jpg"
-          alt="Realistic Pikachu"
-          className="w-full h-full object-cover"
+          src={product.image}
+          alt={product.name}
+          className="h-full w-full object-cover transition duration-300 hover:scale-105"
         />
       </div>
 
-      {/* Product Name & Price */}
-      <div className="flex items-center justify-between">
-        <h3 className="text-[16px] text-gray-700">
-          {productName}
+      {/* Product Information */}
+      <div className="p-4">
+        <p className="text-sm text-gray-500">
+          {product.category}
+        </p>
+
+        <h3 className="mt-1 font-semibold">
+          {product.name}
         </h3>
 
-        <p className="text-[16px] font-semibold text-gray-800">
-          {price}
-        </p>
-      </div>
-
-      {/* Bottom Buttons */}
-      <div className="flex items-center justify-between gap-[15px]">
-
-        {/* Add to Cart */}
-       <button
-          className="
-            h-[48px]
-            w-[216px]
-            rounded-[24px]
-            bg-indigo-600
-            text-white
-            text-[16px]
-            flex
-            items-center
-            justify-center
-            px-[15px]
-            hover:bg-indigo-700
-            transition
-          "
-        >
-          Add to Cart
-        </button>
-
-        {/* Favorite Button */}
-        <button
-          className="
-            w-[48px]
-            h-[48px]
-            rounded-full
-            bg-gray-300
-            flex
-            items-center
-            justify-center
-            hover:bg-gray-400
-            transition
-          "
-        >
-          <span className="text-[24px]">
-            ♡
+        <div className="mt-3 flex items-center justify-between">
+          <span className="font-bold">
+            Rs. {product.price}
           </span>
-        </button>
 
+          <button className="rounded-lg bg-black px-3 py-2 text-sm text-white hover:bg-gray-800">
+            Add
+          </button>
+        </div>
       </div>
+
     </div>
   );
-};
+}
 
 export default ProductCard;
