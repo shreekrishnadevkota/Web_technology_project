@@ -9,6 +9,7 @@ import About from "./pages/About";
 import Cart from "./pages/Cart";
 import Profile from "./pages/Profile";
 import Footer from "./component/Footer";
+import Auth from "./pages/Auth";
 
 function App() {
   return (
@@ -30,6 +31,9 @@ function App() {
           <Route path="/cart" element={<Cart />} />
 
           <Route path="/profile" element={<Profile />} />
+
+          <Route path="/auth" element={<Auth/>}/>
+          
         </Routes>
         <Footer/>
       </BrowserRouter>
