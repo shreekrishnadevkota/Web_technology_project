@@ -63,10 +63,10 @@ function NavBar() {
             </Link>
 
             <Link
-              to="/profile"
+              to="/auth"
               className="text-sm font-medium hover:text-blue-600"
             >
-              Profile
+              Login
             </Link>
           </div>
 
