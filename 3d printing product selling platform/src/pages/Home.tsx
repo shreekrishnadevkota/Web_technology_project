@@ -272,10 +272,7 @@ function Home() {
 
           {/* Hero Content */}
           <div>
-            {/* Small Badge */}
-            <div className="inline-flex items-center gap-2 rounded-full border border-gray-700 bg-white/10 px-4 py-2 text-sm text-gray-300 backdrop-blur">
-              ✨ Creative 3D Printing Marketplace
-            </div>
+            
 
             {/* Heading */}
             <h1 className="mt-6 text-4xl font-bold leading-tight sm:text-5xl lg:text-6xl">
@@ -337,16 +334,7 @@ function Home() {
           {/* Hero Image */}
           <div className="relative">
 
-            {/* Decorative Card */}
-            <div className="absolute -left-4 top-8 z-10 hidden rounded-xl border border-white/20 bg-white/10 p-4 backdrop-blur md:block">
-              <p className="text-xs text-gray-300">
-                CUSTOM DESIGN
-              </p>
-
-              <p className="mt-1 font-semibold">
-                Made For You
-              </p>
-            </div>
+      
 
             {/* Main Image */}
             <div className="overflow-hidden rounded-3xl border border-white/10 shadow-2xl">
@@ -357,16 +345,7 @@ function Home() {
               />
             </div>
 
-            {/* Bottom Floating Card */}
-            <div className="absolute -bottom-5 right-4 rounded-xl border border-white/20 bg-white/10 p-4 backdrop-blur">
-              <p className="text-xs text-gray-300">
-                CREATE ANYTHING
-              </p>
-
-              <p className="mt-1 font-semibold">
-                Your Idea. Our Print.
-              </p>
-            </div>
+           
 
           </div>
 
