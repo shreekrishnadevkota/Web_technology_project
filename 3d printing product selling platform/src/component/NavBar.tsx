@@ -15,12 +15,12 @@ function NavBar() {
       <div className="mx-auto max-w-6xl px-4">
 
         {/* Top Navbar */}
-        <div className="flex h-16 items-center justify-between">
+        <div className="flex h-16 items-center justify-between ">
 
           {/* Logo */}
           <Link
             to="/"
-            className="text-xl font-bold sm:text-2xl"
+            className="text-xl font-bold pr-6 sm:text-2xl"
           >
             Print<span className="text-blue-600">Shop</span>
           </Link>
