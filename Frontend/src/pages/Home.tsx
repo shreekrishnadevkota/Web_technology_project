@@ -261,7 +261,7 @@ function Home() {
 
       {/* ================= HERO SECTION ================= */}
 
-      <section className="relative overflow-hidden bg-gradient-to-br from-gray-950 via-gray-900 to-blue-950 px-4 py-16 text-white sm:py-20">
+      <section className="relative overflow-hidden `bg-gradient-to-br` from-gray-950 via-gray-900 to-blue-950 px-4 py-16 text-white sm:py-20">
         
         {/* Background Decoration */}
         <div className="absolute -left-20 top-10 h-72 w-72 rounded-full bg-blue-600 opacity-20 blur-3xl"></div>
@@ -277,7 +277,7 @@ function Home() {
             {/* Heading */}
             <h1 className="mt-6 text-4xl font-bold leading-tight sm:text-5xl lg:text-6xl">
               Turn Your
-              <span className="block bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
+              <span className="block `bg-gradient-to-r` from-blue-400 to-purple-400 bg-clip-text text-transparent">
                 Imagination Into Reality
               </span>
             </h1>
