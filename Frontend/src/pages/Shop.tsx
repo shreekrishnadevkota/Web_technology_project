@@ -182,14 +182,7 @@ function Shop() {
         {/* Search and Sort */}
         <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
 
-          {/* Search */}
-          <input
-            type="text"
-            placeholder="Search products..."
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            className="w-full rounded-lg border border-gray-300 bg-white px-4 py-3 outline-none focus:border-black sm:max-w-md"
-          />
+         
 
           {/* Sort */}
           <select
