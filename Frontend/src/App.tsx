@@ -10,6 +10,7 @@ import Cart from "./pages/Cart";
 import Profile from "./pages/Profile";
 import Footer from "./component/Footer";
 import Auth from "./pages/Auth";
+import SellProduct from "./pages/SellProduct";
 
 function App() {
   return (
@@ -33,6 +34,8 @@ function App() {
           <Route path="/profile" element={<Profile />} />
 
           <Route path="/auth" element={<Auth/>}/>
+
+          <Route path="/ProductList" element={<SellProduct/>}/>
           
         </Routes>
         <Footer/>
