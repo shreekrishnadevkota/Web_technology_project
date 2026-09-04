@@ -1,130 +1,74 @@
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import ProductCard from "../component/ProductCard";
+import heroImage from "../assets/hero.png";
+import ProductDetails from "../component/ProductDetails";
 
 interface Product {
   id: number;
   name: string;
   price: number;
+  category: string;
   image: string;
-  category?: string;
-}
-
-interface ProductSectionProps {
-  title: string;
   description: string;
-  products: Product[];
-}
-
-function ProductSection({
-  title,
-  description,
-  products,
-}: ProductSectionProps) {
-  const scrollRef = useRef<HTMLDivElement>(null);
-
-  const scrollLeft = () => {
-    scrollRef.current?.scrollBy({
-      left: -500,
-      behavior: "smooth",
-    });
-  };
-
-  const scrollRight = () => {
-    scrollRef.current?.scrollBy({
-      left: 500,
-      behavior: "smooth",
-    });
-  };
-
-  return (
-    <section className="mt-14">
-      {/* Section Heading */}
-      <div className="mb-6 flex items-end justify-between">
-        <div>
-          <p className="text-sm font-semibold uppercase tracking-wider text-blue-600">
-            Explore
-          </p>
-
-          <h2 className="mt-1 text-2xl font-bold sm:text-3xl">
-            {title}
-          </h2>
-
-          <p className="mt-2 text-sm text-gray-500">
-            {description}
-          </p>
-        </div>
-
-        {/* Slider Buttons */}
-        <div className="flex gap-2">
-          <button
-            onClick={scrollLeft}
-            className="flex h-10 w-10 items-center justify-center rounded-full border border-gray-300 bg-white text-lg transition hover:bg-black hover:text-white"
-          >
-            ←
-          </button>
-
-          <button
-            onClick={scrollRight}
-            className="flex h-10 w-10 items-center justify-center rounded-full border border-gray-300 bg-white text-lg transition hover:bg-black hover:text-white"
-          >
-            →
-          </button>
-        </div>
-      </div>
-
-      {/* Product Slider */}
-      <div
-        ref={scrollRef}
-        className="flex gap-4 overflow-x-auto scroll-smooth pb-4"
-      >
-        {products.map((product) => (
-          <div
-            key={product.id}
-            className="min-w-[220px] sm:min-w-[240px]"
-          >
-            <ProductCard product={product} />
-          </div>
-        ))}
-      </div>
-    </section>
-  );
 }
 
 function Home() {
-  const famousProducts: Product[] = [
+
+  // Product slider
+  const productSlider = useRef<HTMLDivElement>(null);
+
+  // Selected product for product details
+  const [selectedProduct, setSelectedProduct] =
+    useState<Product | null>(null);
+
+
+  // Products
+  const products: Product[] = [
     {
       id: 1,
-      name: "Modern Table Lamp",
+      name: "Dragon Figurine",
       price: 1200,
-      category: "Home Decoration",
+      category: "Figures",
       image:
-        "https://images.unsplash.com/photo-1507473885765-e6ed057f782c",
+        "https://images.unsplash.com/photo-1635805737707-575885ab0820",
+      description:
+        "A beautiful 3D printed dragon figurine. Perfect for decoration, collectors and fantasy lovers.",
     },
+
     {
       id: 2,
-      name: "Custom Phone Stand",
+      name: "Modern Lamp",
+      price: 1500,
+      category: "Home",
+      image:
+        "https://images.unsplash.com/photo-1507473885765-e6ed057f782c",
+      description:
+        "A modern 3D printed lamp designed to give your room a stylish and creative look.",
+    },
+
+    {
+      id: 3,
+      name: "Plant Pot",
+      price: 800,
+      category: "Decoration",
+      image:
+        "https://images.unsplash.com/photo-1485955900006-10f4d324d411",
+      description:
+        "A simple and stylish plant pot suitable for small indoor plants and home decoration.",
+    },
+
+    {
+      id: 4,
+      name: "Phone Stand",
       price: 500,
       category: "Accessories",
       image:
-        "https://images.unsplash.com/photo-1517336714731-489689fd1ca8",
+        "https://images.unsplash.com/photo-1603313011108-4e1b5c6c3f5e",
+      description:
+        "A compact 3D printed phone stand perfect for your desk, office or study table.",
     },
-    {
-      id: 3,
-      name: "Miniature Statue",
-      price: 1500,
-      category: "Miniatures",
-      image:
-        "https://images.unsplash.com/photo-1577083552431-6e5fd01aa342",
-    },
-    {
-      id: 4,
-      name: "Creative Flower Pot",
-      price: 800,
-      category: "Home Decoration",
-      image:
-        "https://images.unsplash.com/photo-1485955900006-10f4d324d411",
-    },
+
     {
       id: 5,
       name: "Desk Organizer",
@@ -132,324 +76,529 @@ function Home() {
       category: "Office",
       image:
         "https://images.unsplash.com/photo-1497215728101-856f4ea42174",
+      description:
+        "Keep your workspace clean and organized with this practical 3D printed desk organizer.",
     },
-  ];
 
-  const trendingProducts: Product[] = [
     {
       id: 6,
-      name: "Gaming Controller Stand",
+      name: "Gaming Stand",
       price: 1400,
       category: "Gaming",
       image:
-        "https://images.unsplash.com/photo-1511512578047-dfb367046420",
-    },
-    {
-      id: 7,
-      name: "Custom Keychain",
-      price: 250,
-      category: "Accessories",
-      image:
-        "https://images.unsplash.com/photo-1515562141207-7a88fb7ce338",
-    },
-    {
-      id: 8,
-      name: "Headphone Stand",
-      price: 1100,
-      category: "Office",
-      image:
-        "https://images.unsplash.com/photo-1505740420928-5e560c06d30e",
-    },
-    {
-      id: 9,
-      name: "3D Printed Figure",
-      price: 2000,
-      category: "Figures",
-      image:
-        "https://images.unsplash.com/photo-1550745165-9bc0b252726f",
-    },
-    {
-      id: 10,
-      name: "Modern Wall Art",
-      price: 1800,
-      category: "Decoration",
-      image:
-        "https://images.unsplash.com/photo-1549490349-8643362247b5",
+        "https://images.unsplash.com/photo-1593113646773-028c64a8f1b8",
+      description:
+        "A useful gaming stand designed to keep your gaming setup clean and organized.",
     },
   ];
 
-  const materialProducts: Product[] = [
-    {
-      id: 11,
-      name: "PLA Printed Product",
-      price: 900,
-      category: "PLA Material",
-      image:
-        "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158",
-    },
-    {
-      id: 12,
-      name: "PETG Printed Product",
-      price: 1300,
-      category: "PETG Material",
-      image:
-        "https://images.unsplash.com/photo-1581092160562-40aa08e78837",
-    },
-    {
-      id: 13,
-      name: "ABS Printed Product",
-      price: 1500,
-      category: "ABS Material",
-      image:
-        "https://images.unsplash.com/photo-1531297484001-80022131f5a1",
-    },
-    {
-      id: 14,
-      name: "Flexible TPU Product",
-      price: 1100,
-      category: "TPU Material",
-      image:
-        "https://images.unsplash.com/photo-1518770660439-4636190af475",
-    },
-  ];
 
-  const bestSellingProducts: Product[] = [
-    {
-      id: 15,
-      name: "Custom Name Plate",
-      price: 1000,
-      category: "Custom Product",
-      image:
-        "https://images.unsplash.com/photo-1517841905240-472988babdf9",
-    },
-    {
-      id: 16,
-      name: "Mobile Holder",
-      price: 450,
-      category: "Accessories",
-      image:
-        "https://images.unsplash.com/photo-1511707171634-5f897ff02aa9",
-    },
-    {
-      id: 17,
-      name: "Cable Organizer",
-      price: 350,
-      category: "Office",
-      image:
-        "https://images.unsplash.com/photo-1558655146-d09347e92766",
-    },
-    {
-      id: 18,
-      name: "Custom Trophy",
-      price: 2500,
-      category: "Awards",
-      image:
-        "https://images.unsplash.com/photo-1567427017947-545c5f8d16ad",
-    },
-    {
-      id: 19,
-      name: "Creative Plant Pot",
-      price: 700,
-      category: "Decoration",
-      image:
-        "https://images.unsplash.com/photo-1501004318641-b39e6451bec6",
-    },
-  ];
+  // Product slider
+  const scrollProducts = (direction: "left" | "right") => {
+
+    if (!productSlider.current) return;
+
+    productSlider.current.scrollBy({
+      left: direction === "left" ? -320 : 320,
+      behavior: "smooth",
+    });
+
+  };
+
 
   return (
-    <main className="min-h-screen bg-gray-50">
+    <main className="bg-[#f8f9fc]">
+
 
       {/* ================= HERO SECTION ================= */}
 
-      <section className="relative overflow-hidden `bg-gradient-to-br` from-gray-950 via-gray-900 to-blue-950 px-4 py-16 text-white sm:py-20">
-        
-        {/* Background Decoration */}
-        <div className="absolute -left-20 top-10 h-72 w-72 rounded-full bg-blue-600 opacity-20 blur-3xl"></div>
+      <section className="relative overflow-hidden bg-[#07152f] text-white">
 
-        <div className="absolute -right-20 bottom-0 h-80 w-80 rounded-full bg-purple-600 opacity-20 blur-3xl"></div>
+        {/* Background Glow */}
 
-        <div className="relative mx-auto grid max-w-6xl items-center gap-12 lg:grid-cols-2">
+        <div className="absolute -left-32 top-10 h-72 w-72 rounded-full bg-blue-600/20 blur-3xl" />
 
-          {/* Hero Content */}
-          <div>
-            
+        <div className="absolute right-0 top-0 h-96 w-96 rounded-full bg-purple-600/10 blur-3xl" />
 
-            {/* Heading */}
-            <h1 className="mt-6 text-4xl font-bold leading-tight sm:text-5xl lg:text-6xl">
-              Turn Your
-              <span className="block `bg-gradient-to-r` from-blue-400 to-purple-400 bg-clip-text text-transparent">
-                Imagination Into Reality
+
+        <div className="relative mx-auto grid min-h-[560px] max-w-7xl items-center gap-8 px-5 py-12 sm:px-8 lg:grid-cols-2 lg:px-10">
+
+
+          {/* Hero Text */}
+
+          <div className="z-10 max-w-xl">
+
+            <div className="mb-5 flex items-center gap-2 text-xs font-semibold tracking-[0.25em] text-blue-300">
+
+              <span className="h-px w-7 bg-blue-400" />
+
+              CREATE • PRINT • ENJOY
+
+            </div>
+
+
+            <h1 className="text-4xl font-extrabold leading-[1.05] tracking-tight sm:text-5xl lg:text-6xl">
+
+              Bring Your Ideas
+
+              <br />
+
+              to Life with{" "}
+
+              <span className="text-blue-500">
+                3D Printing
               </span>
+
             </h1>
 
-            {/* Description */}
-            <p className="mt-6 max-w-xl text-base leading-7 text-gray-300 sm:text-lg">
-              Discover unique products created with modern 3D printing
-              technology. From creative home decorations to custom designs,
-              everything starts with an idea.
+
+            <p className="mt-6 max-w-lg text-sm leading-6 text-slate-300 sm:text-base">
+
+              Unique, useful and creative products made for
+              modern life. Discover something different or
+              bring your own idea to reality.
+
             </p>
 
+
             {/* Buttons */}
-            <div className="mt-8 flex flex-wrap gap-4">
+
+            <div className="mt-8 flex flex-wrap gap-3">
+
               <Link
                 to="/shop"
-                className="rounded-xl bg-white px-6 py-3 font-semibold text-black transition hover:scale-105 hover:bg-gray-200"
+                className="rounded-lg bg-blue-600 px-6 py-3 text-sm font-semibold shadow-lg shadow-blue-600/20 transition hover:bg-blue-500"
               >
-                Explore Products →
+                Shop Now →
               </Link>
+
 
               <Link
                 to="/categories"
-                className="rounded-xl border border-gray-600 px-6 py-3 font-semibold text-white transition hover:bg-white/10"
+                className="rounded-lg border border-slate-600 bg-white/5 px-6 py-3 text-sm font-semibold hover:bg-white/10"
               >
-                Browse Categories
+                Explore Categories
               </Link>
+
             </div>
 
-            {/* Statistics */}
-            <div className="mt-10 flex gap-8">
-              <div>
-                <h3 className="text-2xl font-bold">500+</h3>
-                <p className="text-sm text-gray-400">
-                  Unique Products
+
+            {/* Stats */}
+
+            <div className="mt-9 grid max-w-md grid-cols-3 overflow-hidden rounded-2xl border border-white/10 bg-white/[0.04]">
+
+              <div className="px-4 py-4">
+
+                <p className="text-lg font-bold">
+                  500+
                 </p>
+
+                <p className="text-xs text-slate-400">
+                  Products
+                </p>
+
               </div>
 
-              <div>
-                <h3 className="text-2xl font-bold">100+</h3>
-                <p className="text-sm text-gray-400">
-                  Happy Customers
+
+              <div className="border-x border-white/10 px-4 py-4">
+
+                <p className="text-lg font-bold">
+                  100+
                 </p>
+
+                <p className="text-xs text-slate-400">
+                  Customers
+                </p>
+
               </div>
 
-              <div>
-                <h3 className="text-2xl font-bold">24/7</h3>
-                <p className="text-sm text-gray-400">
-                  Support
+
+              <div className="px-4 py-4">
+
+                <p className="text-lg font-bold">
+                  Custom
                 </p>
+
+                <p className="text-xs text-slate-400">
+                  Designs
+                </p>
+
               </div>
+
             </div>
+
           </div>
+
 
           {/* Hero Image */}
-          <div className="relative">
 
-      
+          <div className="relative flex justify-center lg:justify-end">
 
-            {/* Main Image */}
-            <div className="overflow-hidden rounded-3xl border border-white/10 shadow-2xl">
+            <div className="absolute h-72 w-72 rounded-full bg-blue-500/20 blur-3xl" />
+
+            <div className="relative w-full max-w-xl overflow-hidden rounded-3xl border border-white/10 shadow-2xl">
+
               <img
-                src="https://images.unsplash.com/photo-1581092160607-ee22621dd758"
-                alt="3D Printing"
-                className="h-[350px] w-full object-cover sm:h-[450px]"
+                src={heroImage}
+                alt="3D printed product"
+                className="h-[320px] w-full object-cover sm:h-[420px] lg:h-[470px]"
               />
+
+
+              <div className="absolute inset-0 bg-gradient-to-t from-[#07152f]/50 via-transparent to-transparent" />
+
+
+              <div className="absolute bottom-5 left-5 rounded-xl border border-white/20 bg-black/40 px-4 py-3">
+
+                <p className="text-[10px] tracking-widest text-blue-300">
+                  MADE FOR YOU
+                </p>
+
+                <p className="mt-1 text-sm font-semibold">
+                  Custom 3D Designs
+                </p>
+
+              </div>
+
             </div>
 
-           
-
           </div>
 
         </div>
+
+
+        {/* Curved Bottom */}
+
+        <div className="absolute -bottom-1 left-0 h-8 w-full rounded-[50%_50%_0_0] bg-[#f8f9fc]" />
+
       </section>
 
-      {/* ================= FEATURES ================= */}
 
-      <section className="border-b border-gray-200 bg-white px-4">
-        <div className="mx-auto grid max-w-6xl grid-cols-1 gap-6 py-8 sm:grid-cols-3">
 
-          <div className="text-center">
-            <h3 className="font-semibold">
-              🚚 Fast Delivery
-            </h3>
+      {/* ================= TRENDING PRODUCTS ================= */}
 
-            <p className="mt-1 text-sm text-gray-500">
-              Safe and reliable delivery.
+      <section className="mx-auto max-w-7xl px-5 py-10 sm:px-8 lg:px-10">
+
+
+        {/* Header */}
+
+        <div className="mb-6 flex items-end justify-between">
+
+          <div>
+
+            <p className="text-xs font-semibold uppercase tracking-widest text-blue-600">
+              Popular right now
             </p>
+
+            <h2 className="mt-1 text-2xl font-bold sm:text-3xl">
+              Trending Products
+            </h2>
+
           </div>
 
-          <div className="text-center">
-            <h3 className="font-semibold">
-              🎨 Custom Designs
-            </h3>
-
-            <p className="mt-1 text-sm text-gray-500">
-              Create products your way.
-            </p>
-          </div>
-
-          <div className="text-center">
-            <h3 className="font-semibold">
-              ⭐ Quality Products
-            </h3>
-
-            <p className="mt-1 text-sm text-gray-500">
-              Made with premium materials.
-            </p>
-          </div>
-
-        </div>
-      </section>
-
-      {/* ================= PRODUCT SECTIONS ================= */}
-
-      <div className="mx-auto max-w-6xl px-4 py-8">
-
-        <ProductSection
-          title="Famous Products"
-          description="Products loved by our customers."
-          products={famousProducts}
-        />
-
-        <ProductSection
-          title="Trending Now"
-          description="Discover what everyone is talking about."
-          products={trendingProducts}
-        />
-
-        <ProductSection
-          title="Shop by Material"
-          description="Explore products made from different materials."
-          products={materialProducts}
-        />
-
-        <ProductSection
-          title="Best Selling"
-          description="Our most popular products."
-          products={bestSellingProducts}
-        />
-
-      </div>
-
-      {/* ================= CTA SECTION ================= */}
-
-      <section className="px-4 py-16">
-        <div className="mx-auto max-w-6xl overflow-hidden rounded-3xl bg-gradient-to-r from-blue-600 to-purple-600 px-6 py-14 text-center text-white sm:px-12">
-
-          <p className="text-sm font-semibold uppercase tracking-widest text-blue-100">
-            Custom 3D Printing
-          </p>
-
-          <h2 className="mt-4 text-3xl font-bold sm:text-4xl">
-            Have Something Unique In Mind?
-          </h2>
-
-          <p className="mx-auto mt-4 max-w-2xl text-blue-100">
-            Bring your imagination to life. Create personalized products
-            designed specifically for you.
-          </p>
 
           <Link
             to="/shop"
-            className="mt-8 inline-block rounded-xl bg-white px-7 py-3 font-semibold text-blue-600 transition hover:scale-105"
+            className="hidden text-xs font-semibold text-blue-600 sm:block"
           >
-            Start Creating →
+            See All →
           </Link>
 
         </div>
+
+
+        {/* Product Slider */}
+
+        <div className="relative">
+
+
+          {/* Left Arrow */}
+
+          <button
+            onClick={() => scrollProducts("left")}
+            className="absolute -left-3 top-1/2 z-10 hidden h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border border-gray-200 bg-white text-lg shadow-md sm:flex"
+          >
+            ←
+          </button>
+
+
+          {/* Products */}
+
+          <div
+            ref={productSlider}
+            className="flex gap-4 overflow-x-auto scroll-smooth pb-4 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+          >
+
+            {products.map((product) => (
+
+              <div
+                key={product.id}
+                className="w-[230px] min-w-[230px] cursor-pointer sm:w-[250px] sm:min-w-[250px]"
+                onClick={() => setSelectedProduct(product)}
+              >
+
+                <ProductCard
+                  product={product}
+                />
+
+              </div>
+
+            ))}
+
+          </div>
+
+
+          {/* Right Arrow */}
+
+          <button
+            onClick={() => scrollProducts("right")}
+            className="absolute -right-3 top-1/2 z-10 hidden h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border border-gray-200 bg-white text-lg shadow-md sm:flex"
+          >
+            →
+          </button>
+
+        </div>
+
+
+        {/* Mobile See All */}
+
+        <div className="mt-2 text-center sm:hidden">
+
+          <Link
+            to="/shop"
+            className="text-sm font-semibold text-blue-600"
+          >
+            See All Products →
+          </Link>
+
+        </div>
+
       </section>
+
+
+
+      {/* ================= SHOP BY CATEGORY ================= */}
+
+      <section className="mx-auto max-w-7xl px-5 py-10 sm:px-8 lg:px-10">
+
+        <div className="mb-6">
+
+          <p className="text-xs font-semibold uppercase tracking-widest text-blue-600">
+            Find your style
+          </p>
+
+          <h2 className="mt-1 text-2xl font-bold sm:text-3xl">
+            Shop by Category
+          </h2>
+
+        </div>
+
+
+        <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
+
+          <CategoryCard
+            title="Home & Decor"
+            icon="🏠"
+            path="/categories"
+          />
+
+          <CategoryCard
+            title="Accessories"
+            icon="🎧"
+            path="/categories"
+          />
+
+          <CategoryCard
+            title="Figures & Toys"
+            icon="🐉"
+            path="/categories"
+          />
+
+          <CategoryCard
+            title="Office"
+            icon="💻"
+            path="/categories"
+          />
+
+        </div>
+
+      </section>
+
+
+
+      {/* ================= WHY PRINTORA ================= */}
+
+      <section className="border-y border-gray-200 bg-white">
+
+        <div className="mx-auto max-w-7xl px-5 py-12 sm:px-8 lg:px-10">
+
+          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+
+            <Feature
+              icon="✨"
+              title="Unique Designs"
+              description="Creative products you won't find everywhere."
+            />
+
+            <Feature
+              icon="🎨"
+              title="Custom Products"
+              description="Turn your ideas into something real."
+            />
+
+            <Feature
+              icon="⚡"
+              title="Quality Printing"
+              description="Made using reliable modern printing technology."
+            />
+
+            <Feature
+              icon="🚚"
+              title="Easy Delivery"
+              description="Simple and convenient delivery experience."
+            />
+
+          </div>
+
+        </div>
+
+      </section>
+
+
+
+      {/* ================= CTA ================= */}
+
+      <section className="mx-auto max-w-7xl px-5 py-12 sm:px-8 lg:px-10">
+
+        <div className="relative overflow-hidden rounded-3xl bg-gradient-to-r from-blue-600 to-indigo-700 px-6 py-12 text-center text-white sm:px-12">
+
+          <div className="absolute -right-20 -top-20 h-60 w-60 rounded-full bg-white/10" />
+
+          <div className="absolute -bottom-24 -left-20 h-60 w-60 rounded-full bg-white/10" />
+
+
+          <div className="relative">
+
+            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-blue-100">
+              Your idea. Your design.
+            </p>
+
+            <h2 className="mt-3 text-3xl font-bold sm:text-4xl">
+              Have Something in Mind?
+            </h2>
+
+            <p className="mx-auto mt-4 max-w-xl text-sm text-blue-100 sm:text-base">
+              Discover our products or create something
+              completely unique with 3D printing.
+            </p>
+
+
+            <Link
+              to="/categories"
+              className="mt-7 inline-block rounded-xl bg-white px-7 py-3 text-sm font-bold text-blue-600"
+            >
+              Explore Products →
+            </Link>
+
+          </div>
+
+        </div>
+
+      </section>
+
+
+
+      {/* ================= PRODUCT DETAILS POPUP ================= */}
+
+      {selectedProduct && (
+
+        <ProductDetails
+          product={selectedProduct}
+          closeDetails={() => setSelectedProduct(null)}
+        />
+
+      )}
 
     </main>
   );
 }
+
+
+
+/* ================= CATEGORY CARD ================= */
+
+function CategoryCard({
+  title,
+  icon,
+  path,
+}: {
+  title: string;
+  icon: string;
+  path: string;
+}) {
+
+  return (
+
+    <Link
+      to={path}
+      className="group rounded-2xl border border-gray-200 bg-white p-5 transition hover:-translate-y-1 hover:border-blue-200 hover:shadow-lg"
+    >
+
+      <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-blue-50 text-2xl">
+        {icon}
+      </div>
+
+      <h3 className="mt-4 text-sm font-bold sm:text-base">
+        {title}
+      </h3>
+
+      <p className="mt-1 text-xs text-gray-500">
+        Explore products →
+      </p>
+
+    </Link>
+
+  );
+}
+
+
+
+/* ================= FEATURE ================= */
+
+function Feature({
+  icon,
+  title,
+  description,
+}: {
+  icon: string;
+  title: string;
+  description: string;
+}) {
+
+  return (
+
+    <div className="flex gap-4">
+
+      <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-gray-100 text-xl">
+        {icon}
+      </div>
+
+      <div>
+
+        <h3 className="text-sm font-bold">
+          {title}
+        </h3>
+
+        <p className="mt-1 text-xs leading-5 text-gray-500">
+          {description}
+        </p>
+
+      </div>
+
+    </div>
+
+  );
+}
+
 
 export default Home;
