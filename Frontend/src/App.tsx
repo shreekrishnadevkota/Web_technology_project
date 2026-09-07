@@ -11,6 +11,8 @@ import Profile from "./pages/Profile";
 import Footer from "./component/Footer";
 import Auth from "./pages/Auth";
 import SellProduct from "./pages/SellProduct";
+import Orders from "./pages/Orders";
+import CustomPrint from "./pages/CustomPrint";
 
 function App() {
   return (
@@ -36,6 +38,10 @@ function App() {
           <Route path="/auth" element={<Auth/>}/>
 
           <Route path="/ProductList" element={<SellProduct/>}/>
+
+          <Route path="/order" element={<Orders/>}/>
+
+          <Route path="/customPrint" element={<CustomPrint/>}/>
           
         </Routes>
         <Footer/>
