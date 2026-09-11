@@ -1,0 +1,15 @@
+# Dependency directories (never track these, they are too large!)
+node_modules/
+
+# Environment variables and secrets (contains private API keys/passwords)
+.env
+.env.local
+
+# Logs
+logs
+*.log
+npm-debug.log*
+
+# Operating system files
+.DS_Store
+Thumbs.db
