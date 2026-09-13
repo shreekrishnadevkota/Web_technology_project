@@ -22,7 +22,7 @@ function NavBar() {
 
   const navLinks = [
     { name: "Shop", path: "/shop" },
-    { name: "Categories", path: "/categories" },
+    { name: "Custome-Print", path: "/customPrint" },
     { name: "About", path: "/about" },
   ];
 
