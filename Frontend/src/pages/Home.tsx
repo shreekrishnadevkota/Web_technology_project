@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import ProductCard from "../component/ProductCard";
 import heroImage from "../assets/hero.png";
 import ProductDetails from "../component/ProductDetails";
+import CategoryCart from "../component/CategoryCart";
 
 interface Product {
   id: number;
@@ -377,7 +378,7 @@ function Home() {
 
 
 
-      {/* ================= WHY PRINTORA ================= */}
+      {/*WHY section */}
 
       <section className="border-y border-gray-200 bg-white">
 
@@ -415,6 +416,8 @@ function Home() {
 
       </section>
 
+      <CategoryCart/>
+
 
 
       {/* ================= CTA ================= */}
@@ -445,7 +448,7 @@ function Home() {
 
 
             <Link
-              to="/categories"
+              to="/shop"
               className="mt-7 inline-block rounded-xl bg-white px-7 py-3 text-sm font-bold text-blue-600"
             >
               Explore Products →

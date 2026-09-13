@@ -1,23 +1,60 @@
+import { useState } from "react";
+
 function CustomPrint() {
+  const [search, setSearch] = useState("");
+  const [selectedSeller, setSelectedSeller] = useState("");
+
+  const sellers = [
+    {
+      id: 1,
+      name: "Print Studio Nepal",
+      location: "Kathmandu",
+    },
+    {
+      id: 2,
+      name: "3D Maker Hub",
+      location: "Lalitpur",
+    },
+    {
+      id: 3,
+      name: "Creative Prints",
+      location: "Bhaktapur",
+    },
+    {
+      id: 4,
+      name: "Nepal 3D Works",
+      location: "Kathmandu",
+    },
+  ];
+
+  const filteredSellers = sellers.filter((seller) =>
+    seller.name.toLowerCase().includes(search.toLowerCase())
+  );
+
   return (
     <div className="min-h-screen bg-gray-50 px-4 py-8 sm:px-6 lg:px-10">
 
-      <div className="mx-auto max-w-3xl">
+      {/* Heading */}
+      <div className="mx-auto max-w-6xl text-center">
+        <h1 className="text-3xl font-bold text-gray-900">
+          Custom 3D Printing
+        </h1>
 
-        {/* Heading */}
-        <div className="text-center">
-          <h1 className="text-3xl font-bold text-gray-900">
-            Custom 3D Printing
-          </h1>
-
-          <p className="mt-2 text-gray-500">
-            Have your own idea? Send us your design and printing requirements.
-          </p>
-        </div>
+        <p className="mt-2 text-gray-500">
+          Have your own idea? Send your design and choose a seller.
+        </p>
+      </div>
 
 
-        {/* Form */}
-        <div className="mt-8 rounded-2xl bg-white p-5 shadow-sm sm:p-8">
+      {/* Main Content */}
+      <div className="mx-auto mt-8 grid max-w-6xl gap-6 lg:grid-cols-3">
+
+
+        {/* =========================
+            CUSTOM PRINT FORM
+        ========================== */}
+
+        <div className="rounded-2xl bg-white p-5 shadow-sm sm:p-8 lg:col-span-2">
 
           <h2 className="text-xl font-semibold text-gray-900">
             Submit Your Request
@@ -26,6 +63,7 @@ function CustomPrint() {
 
           {/* Description */}
           <div className="mt-6">
+
             <label className="mb-2 block text-sm font-medium text-gray-700">
               What do you want to print?
             </label>
@@ -35,11 +73,13 @@ function CustomPrint() {
               rows={4}
               className="w-full rounded-xl border border-gray-300 px-4 py-3 outline-none focus:border-blue-500"
             />
+
           </div>
 
 
           {/* Material */}
           <div className="mt-5">
+
             <label className="mb-2 block text-sm font-medium text-gray-700">
               Material
             </label>
@@ -53,6 +93,7 @@ function CustomPrint() {
               <option>PETG</option>
               <option>Resin</option>
             </select>
+
           </div>
 
 
@@ -114,6 +155,106 @@ function CustomPrint() {
           >
             Submit Custom Request
           </button>
+
+        </div>
+
+
+        {/* =========================
+            SELLER SELECTION
+        ========================== */}
+
+        <div className="rounded-2xl bg-white p-5 shadow-sm sm:p-6">
+
+          <h2 className="text-xl font-semibold text-gray-900">
+            Choose a Seller
+          </h2>
+
+          <p className="mt-1 text-sm text-gray-500">
+            Select who you want to print your design.
+          </p>
+
+
+          {/* Search */}
+          <div className="mt-5">
+
+            <input
+              type="text"
+              placeholder="Search seller..."
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              className="w-full rounded-xl border border-gray-300 px-4 py-3 outline-none focus:border-blue-500"
+            />
+
+          </div>
+
+
+          {/* Seller List */}
+          <div className="mt-5 space-y-3">
+
+            {filteredSellers.length > 0 ? (
+
+              filteredSellers.map((seller) => (
+
+                <label
+                  key={seller.id}
+                  className={`flex cursor-pointer items-center gap-3 rounded-xl border p-4 transition ${
+                    selectedSeller === seller.name
+                      ? "border-blue-500 bg-blue-50"
+                      : "border-gray-200 hover:bg-gray-50"
+                  }`}
+                >
+
+                  <input
+                    type="radio"
+                    name="seller"
+                    value={seller.name}
+                    checked={selectedSeller === seller.name}
+                    onChange={() =>
+                      setSelectedSeller(seller.name)
+                    }
+                    className="h-4 w-4"
+                  />
+
+
+                  <div>
+                    <h3 className="font-medium text-gray-900">
+                      {seller.name}
+                    </h3>
+
+                    <p className="text-sm text-gray-500">
+                      {seller.location}
+                    </p>
+                  </div>
+
+                </label>
+
+              ))
+
+            ) : (
+
+              <p className="py-5 text-center text-sm text-gray-500">
+                No seller found.
+              </p>
+
+            )}
+
+          </div>
+
+
+          {/* Selected Seller */}
+          {selectedSeller && (
+            <div className="mt-5 rounded-xl bg-gray-100 p-4">
+
+              <p className="text-sm text-gray-500">
+                Selected Seller
+              </p>
+
+              <p className="mt-1 font-semibold text-gray-900">
+                {selectedSeller}
+              </p>
+
+            </div>
+          )}
 
         </div>
 
