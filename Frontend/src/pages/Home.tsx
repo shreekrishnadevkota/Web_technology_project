@@ -111,7 +111,7 @@ function Home() {
     <main className="bg-[#f8f9fc]">
 
 
-      {/* ================= HERO SECTION ================= */}
+      {/*  HERO SECTION */}
 
       <section className="relative overflow-hidden bg-[#07152f] text-white">
 
@@ -240,7 +240,7 @@ function Home() {
             <div className="relative w-full max-w-xl overflow-hidden rounded-3xl border border-white/10 shadow-2xl">
 
               <img
-                src={heroImage}
+                src="../public/herp-img.jpg"
                 alt="3D printed product"
                 className="h-[320px] w-full object-cover sm:h-[420px] lg:h-[470px]"
               />
@@ -276,7 +276,7 @@ function Home() {
 
 
 
-      {/* ================= TRENDING PRODUCTS ================= */}
+      {/* TRENDING PRODUCTS*/}
 
       <section className="mx-auto max-w-7xl px-5 py-10 sm:px-8 lg:px-10">
 
@@ -420,7 +420,7 @@ function Home() {
 
 
 
-      {/* ================= CTA ================= */}
+      {/*  CTA */}
 
       <section className="mx-auto max-w-7xl px-5 py-12 sm:px-8 lg:px-10">
 
@@ -462,7 +462,7 @@ function Home() {
 
 
 
-      {/* ================= PRODUCT DETAILS POPUP ================= */}
+      {/* PRODUCT DETAILS POPUP */}
 
       {selectedProduct && (
 
@@ -478,7 +478,7 @@ function Home() {
 }
 
 
-/* ================= FEATURE ================= */
+/* FEATURE  */
 
 function Feature({
   icon,
