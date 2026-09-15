@@ -267,3 +267,30 @@ export function ChevronRightIcon({ className = "h-4 w-4" }: IconProps) {
     </svg>
   );
 }
+
+export function EyeIcon({ className = "h-5 w-5" }: IconProps) {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" className={className} stroke="currentColor">
+      <path
+        d="M1.5 12S5 5 12 5s10.5 7 10.5 7-3.5 7-10.5 7S1.5 12 1.5 12z"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <circle cx="12" cy="12" r="3" strokeWidth="2" />
+    </svg>
+  );
+}
+
+export function EyeOffIcon({ className = "h-5 w-5" }: IconProps) {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" className={className} stroke="currentColor">
+      <path
+        d="M3 3l18 18M10.6 10.6a3 3 0 0 0 4.2 4.2M9.9 4.2A10.4 10.4 0 0 1 12 4c7 0 10.5 7 10.5 7a13.2 13.2 0 0 1-3.1 4M6.6 6.6C3.9 8.3 1.5 12 1.5 12s2.1 4.2 6.2 6"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
