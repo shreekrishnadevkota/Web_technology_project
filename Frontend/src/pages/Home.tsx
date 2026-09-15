@@ -1,18 +1,11 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState, type ReactNode } from "react";
 import { Link } from "react-router-dom";
 import ProductCard from "../component/ProductCard";
-import heroImage from "../assets/hero.png";
 import ProductDetails from "../component/ProductDetails";
 import CategoryCart from "../component/CategoryCart";
-
-interface Product {
-  id: number;
-  name: string;
-  price: number;
-  category: string;
-  image: string;
-  description: string;
-}
+import api from "../axios/axios";
+import type { Product } from "../types";
+import { ArrowLeftIcon, ArrowRightIcon, SparkleIcon, PaletteIcon, BoltIcon, TruckIcon } from "../component/Icons";
 
 function Home() {
 
@@ -23,75 +16,17 @@ function Home() {
   const [selectedProduct, setSelectedProduct] =
     useState<Product | null>(null);
 
+  // Products fetched from the database (real sellers' listings)
+  const [products, setProducts] = useState<Product[]>([]);
+  const [loading, setLoading] = useState(true);
 
-  // Products
-  const products: Product[] = [
-    {
-      id: 1,
-      name: "Dragon Figurine",
-      price: 1200,
-      category: "Figures",
-      image:
-        "https://images.unsplash.com/photo-1635805737707-575885ab0820",
-      description:
-        "A beautiful 3D printed dragon figurine. Perfect for decoration, collectors and fantasy lovers.",
-    },
-
-    {
-      id: 2,
-      name: "Modern Lamp",
-      price: 1500,
-      category: "Home",
-      image:
-        "https://images.unsplash.com/photo-1507473885765-e6ed057f782c",
-      description:
-        "A modern 3D printed lamp designed to give your room a stylish and creative look.",
-    },
-
-    {
-      id: 3,
-      name: "Plant Pot",
-      price: 800,
-      category: "Decoration",
-      image:
-        "https://images.unsplash.com/photo-1485955900006-10f4d324d411",
-      description:
-        "A simple and stylish plant pot suitable for small indoor plants and home decoration.",
-    },
-
-    {
-      id: 4,
-      name: "Phone Stand",
-      price: 500,
-      category: "Accessories",
-      image:
-        "https://images.unsplash.com/photo-1603313011108-4e1b5c6c3f5e",
-      description:
-        "A compact 3D printed phone stand perfect for your desk, office or study table.",
-    },
-
-    {
-      id: 5,
-      name: "Desk Organizer",
-      price: 950,
-      category: "Office",
-      image:
-        "https://images.unsplash.com/photo-1497215728101-856f4ea42174",
-      description:
-        "Keep your workspace clean and organized with this practical 3D printed desk organizer.",
-    },
-
-    {
-      id: 6,
-      name: "Gaming Stand",
-      price: 1400,
-      category: "Gaming",
-      image:
-        "https://images.unsplash.com/photo-1593113646773-028c64a8f1b8",
-      description:
-        "A useful gaming stand designed to keep your gaming setup clean and organized.",
-    },
-  ];
+  useEffect(() => {
+    api
+      .get<{ products: Product[] }>("/products?sort=newest&limit=10")
+      .then((res) => setProducts(res.data.products))
+      .catch(() => setProducts([]))
+      .finally(() => setLoading(false));
+  }, []);
 
 
   // Product slider
@@ -168,9 +103,9 @@ function Home() {
 
               <Link
                 to="/shop"
-                className="rounded-lg bg-blue-600 px-6 py-3 text-sm font-semibold shadow-lg shadow-blue-600/20 transition hover:bg-blue-500"
+                className="flex items-center gap-1.5 rounded-lg bg-blue-600 px-6 py-3 text-sm font-semibold shadow-lg shadow-blue-600/20 transition hover:bg-blue-500"
               >
-                Shop Now →
+                Shop Now <ArrowRightIcon className="h-4 w-4" />
               </Link>
 
 
@@ -191,7 +126,7 @@ function Home() {
               <div className="px-4 py-4">
 
                 <p className="text-lg font-bold">
-                  500+
+                  {products.length}+
                 </p>
 
                 <p className="text-xs text-slate-400">
@@ -276,7 +211,7 @@ function Home() {
 
 
 
-      {/* TRENDING PRODUCTS*/}
+      {/* TRENDING PRODUCTS (live, from the database)*/}
 
       <section className="mx-auto max-w-7xl px-5 py-10 sm:px-8 lg:px-10">
 
@@ -300,65 +235,81 @@ function Home() {
 
           <Link
             to="/shop"
-            className="hidden text-xs font-semibold text-blue-600 sm:block"
+            className="hidden items-center gap-1 text-xs font-semibold text-blue-600 sm:flex"
           >
-            See All →
+            See All <ArrowRightIcon className="h-3 w-3" />
           </Link>
 
         </div>
 
 
-        {/* Product Slider */}
+        {loading && (
+          <p className="py-10 text-center text-sm text-gray-400">
+            Loading products...
+          </p>
+        )}
 
-        <div className="relative">
+        {!loading && products.length === 0 && (
+          <p className="py-10 text-center text-sm text-gray-400">
+            No products listed yet. Be the first seller to list one!
+          </p>
+        )}
+
+        {!loading && products.length > 0 && (
+
+          <div className="relative">
 
 
-          {/* Left Arrow */}
+            {/* Left Arrow */}
 
-          <button
-            onClick={() => scrollProducts("left")}
-            className="absolute -left-3 top-1/2 z-10 hidden h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border border-gray-200 bg-white text-lg shadow-md sm:flex"
-          >
-            ←
-          </button>
+            <button
+              onClick={() => scrollProducts("left")}
+              aria-label="Scroll left"
+              className="absolute -left-3 top-1/2 z-10 hidden h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border border-gray-200 bg-white shadow-md sm:flex"
+            >
+              <ArrowLeftIcon className="h-4 w-4" />
+            </button>
 
 
-          {/* Products */}
+            {/* Products */}
 
-          <div
-            ref={productSlider}
-            className="flex gap-4 overflow-x-auto scroll-smooth pb-4 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
-          >
+            <div
+              ref={productSlider}
+              className="flex gap-4 overflow-x-auto scroll-smooth pb-4 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+            >
 
-            {products.map((product) => (
+              {products.map((product) => (
 
-              <div
-                key={product.id}
-                className="w-[230px] min-w-[230px] cursor-pointer sm:w-[250px] sm:min-w-[250px]"
-                onClick={() => setSelectedProduct(product)}
-              >
+                <div
+                  key={product._id}
+                  className="w-[230px] min-w-[230px] sm:w-[250px] sm:min-w-[250px]"
+                >
 
-                <ProductCard
-                  product={product}
-                />
+                  <ProductCard
+                    product={product}
+                    onClick={() => setSelectedProduct(product)}
+                  />
 
-              </div>
+                </div>
 
-            ))}
+              ))}
+
+            </div>
+
+
+            {/* Right Arrow */}
+
+            <button
+              onClick={() => scrollProducts("right")}
+              aria-label="Scroll right"
+              className="absolute -right-3 top-1/2 z-10 hidden h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border border-gray-200 bg-white shadow-md sm:flex"
+            >
+              <ArrowRightIcon className="h-4 w-4" />
+            </button>
 
           </div>
 
-
-          {/* Right Arrow */}
-
-          <button
-            onClick={() => scrollProducts("right")}
-            className="absolute -right-3 top-1/2 z-10 hidden h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border border-gray-200 bg-white text-lg shadow-md sm:flex"
-          >
-            →
-          </button>
-
-        </div>
+        )}
 
 
         {/* Mobile See All */}
@@ -387,25 +338,25 @@ function Home() {
           <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
 
             <Feature
-              icon="✨"
+              icon={<SparkleIcon className="h-5 w-5" />}
               title="Unique Designs"
               description="Creative products you won't find everywhere."
             />
 
             <Feature
-              icon="🎨"
+              icon={<PaletteIcon className="h-5 w-5" />}
               title="Custom Products"
               description="Turn your ideas into something real."
             />
 
             <Feature
-              icon="⚡"
+              icon={<BoltIcon className="h-5 w-5" />}
               title="Quality Printing"
               description="Made using reliable modern printing technology."
             />
 
             <Feature
-              icon="🚚"
+              icon={<TruckIcon className="h-5 w-5" />}
               title="Easy Delivery"
               description="Simple and convenient delivery experience."
             />
@@ -448,10 +399,10 @@ function Home() {
 
 
             <Link
-              to="/shop"
-              className="mt-7 inline-block rounded-xl bg-white px-7 py-3 text-sm font-bold text-blue-600"
+              to="/customPrint"
+              className="mt-7 inline-flex items-center gap-1.5 rounded-xl bg-white px-7 py-3 text-sm font-bold text-blue-600"
             >
-              Explore Products →
+              Request Custom Print <ArrowRightIcon className="h-4 w-4" />
             </Link>
 
           </div>
@@ -485,7 +436,7 @@ function Feature({
   title,
   description,
 }: {
-  icon: string;
+  icon: ReactNode;
   title: string;
   description: string;
 }) {
@@ -494,7 +445,7 @@ function Feature({
 
     <div className="flex gap-4">
 
-      <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-gray-100 text-xl">
+      <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-gray-100 text-blue-600">
         {icon}
       </div>
 

@@ -1,30 +1,32 @@
 import { Link } from "react-router-dom";
+import type { ReactNode } from "react";
+import { PaletteIcon, StarIcon, FigureIcon, HeartIcon } from "../component/Icons";
 
 function About() {
-  const features = [
+  const features: { title: string; description: string; icon: ReactNode }[] = [
     {
       title: "Creative Products",
       description:
         "Discover unique products designed with creativity and modern technology.",
-      icon: "🎨",
+      icon: <PaletteIcon className="h-7 w-7" />,
     },
     {
       title: "Quality Materials",
       description:
         "We focus on using reliable materials to create durable products.",
-      icon: "⭐",
+      icon: <StarIcon className="h-7 w-7" />,
     },
     {
       title: "Custom Designs",
       description:
         "Bring your imagination to life with personalized 3D printed products.",
-      icon: "🧩",
+      icon: <FigureIcon className="h-7 w-7" />,
     },
     {
       title: "Customer Focused",
       description:
         "We work to provide a simple and enjoyable shopping experience.",
-      icon: "❤️",
+      icon: <HeartIcon className="h-7 w-7" filled />,
     },
   ];
 
@@ -197,7 +199,7 @@ function About() {
                 className="rounded-xl border border-gray-200 p-6 transition hover:-translate-y-1 hover:shadow-lg"
               >
 
-                <div className="text-3xl">
+                <div className="text-blue-600">
                   {feature.icon}
                 </div>
 

@@ -1,266 +1,278 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
+import axios from "axios";
+import api from "../axios/axios";
+import { CameraIcon, UserIcon } from "../component/Icons";
+
+interface Seller {
+  _id: string;
+  name: string;
+  sellerProfile?: {
+    shopName?: string;
+    bio?: string;
+  };
+}
 
 function CustomPrint() {
-  const [search, setSearch] = useState("");
-  const [selectedSeller, setSelectedSeller] = useState("");
+  const [sellers, setSellers] = useState<Seller[]>([]);
+  const [loadingSellers, setLoadingSellers] = useState(true);
+  const [selectedSellerId, setSelectedSellerId] = useState("");
 
-  const sellers = [
-    {
-      id: 1,
-      name: "Print Studio Nepal",
-      location: "Kathmandu",
-    },
-    {
-      id: 2,
-      name: "3D Maker Hub",
-      location: "Lalitpur",
-    },
-    {
-      id: 3,
-      name: "Creative Prints",
-      location: "Bhaktapur",
-    },
-    {
-      id: 4,
-      name: "Nepal 3D Works",
-      location: "Kathmandu",
-    },
-  ];
+  const [title, setTitle] = useState("");
+  const [description, setDescription] = useState("");
+  const [material, setMaterial] = useState("");
+  const [dimensions, setDimensions] = useState("");
+  const [referenceFile, setReferenceFile] = useState<File | null>(null);
+  const [previewUrl, setPreviewUrl] = useState("");
 
-  const filteredSellers = sellers.filter((seller) =>
-    seller.name.toLowerCase().includes(search.toLowerCase())
-  );
+  const [submitting, setSubmitting] = useState(false);
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState(false);
+
+  // Load sellers who currently accept custom print orders
+  useEffect(() => {
+    api
+      .get<{ sellers: Seller[] }>("/auth/custom-print-sellers")
+      .then((res) => setSellers(res.data.sellers))
+      .catch(() => setSellers([]))
+      .finally(() => setLoadingSellers(false));
+  }, []);
+
+  const handleFile = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      setReferenceFile(file);
+      setPreviewUrl(URL.createObjectURL(file));
+    }
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError("");
+
+    if (!selectedSellerId) {
+      setError("Please choose a seller from the panel on the right.");
+      return;
+    }
+
+    if (!title.trim() || !description.trim()) {
+      setError("Please fill in a title and description for your request.");
+      return;
+    }
+
+    try {
+      setSubmitting(true);
+
+      const formData = new FormData();
+      formData.append("sellerId", selectedSellerId);
+      formData.append("title", title);
+      formData.append("description", description);
+      formData.append("material", material);
+      formData.append("dimensions", dimensions);
+      if (referenceFile) {
+        formData.append("referenceImage", referenceFile);
+      }
+
+      // The request lands directly in the chosen seller's Profile,
+      // under their "Custom Print Requests" section.
+      await api.post("/custom-orders", formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
+
+      setSuccess(true);
+      setTitle("");
+      setDescription("");
+      setMaterial("");
+      setDimensions("");
+      setReferenceFile(null);
+      setPreviewUrl("");
+      setSelectedSellerId("");
+    } catch (err: unknown) {
+      if (axios.isAxiosError(err)) {
+        setError(err.response?.data?.message || "Failed to submit request.");
+      }
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  if (success) {
+    return (
+      <main className="flex min-h-screen flex-col items-center justify-center gap-4 bg-gray-50 px-4 text-center">
+        <h1 className="text-2xl font-bold">Request Sent!</h1>
+        <p className="max-w-md text-gray-500">
+          Your custom print request has been sent to the seller. They'll
+          review it and send you a price quote.
+        </p>
+        <div className="flex gap-3">
+          <button
+            onClick={() => setSuccess(false)}
+            className="rounded-xl bg-black px-6 py-3 text-sm font-semibold text-white hover:bg-gray-800"
+          >
+            Send Another Request
+          </button>
+          <Link
+            to="/profile"
+            className="rounded-xl border border-gray-300 px-6 py-3 text-sm font-semibold hover:bg-gray-100"
+          >
+            View My Requests
+          </Link>
+        </div>
+      </main>
+    );
+  }
 
   return (
-    <div className="min-h-screen bg-gray-50 px-4 py-8 sm:px-6 lg:px-10">
+    <main className="mx-auto max-w-6xl px-5 py-10">
 
-      {/* Heading */}
-      <div className="mx-auto max-w-6xl text-center">
-        <h1 className="text-3xl font-bold text-gray-900">
-          Custom 3D Printing
+      <div className="mb-8">
+        <p className="text-xs font-semibold uppercase tracking-widest text-blue-600">
+          Bring your idea to life
+        </p>
+        <h1 className="mt-1 text-2xl font-bold sm:text-3xl">
+          Request a Custom 3D Print
         </h1>
-
-        <p className="mt-2 text-gray-500">
-          Have your own idea? Send your design and choose a seller.
+        <p className="mt-2 text-sm text-gray-500">
+          Describe what you want printed, choose a seller who accepts custom
+          orders, and they'll get back to you with a price quote.
         </p>
       </div>
 
-
-      {/* Main Content */}
-      <div className="mx-auto mt-8 grid max-w-6xl gap-6 lg:grid-cols-3">
-
-
-        {/* =========================
-            CUSTOM PRINT FORM
-        ========================== */}
-
-        <div className="rounded-2xl bg-white p-5 shadow-sm sm:p-8 lg:col-span-2">
-
-          <h2 className="text-xl font-semibold text-gray-900">
-            Submit Your Request
-          </h2>
-
-
-          {/* Description */}
-          <div className="mt-6">
-
-            <label className="mb-2 block text-sm font-medium text-gray-700">
-              What do you want to print?
-            </label>
-
-            <textarea
-              placeholder="Describe your 3D printing idea..."
-              rows={4}
-              className="w-full rounded-xl border border-gray-300 px-4 py-3 outline-none focus:border-blue-500"
-            />
-
-          </div>
-
-
-          {/* Material */}
-          <div className="mt-5">
-
-            <label className="mb-2 block text-sm font-medium text-gray-700">
-              Material
-            </label>
-
-            <select
-              className="w-full rounded-xl border border-gray-300 bg-white px-4 py-3 outline-none focus:border-blue-500"
-            >
-              <option>Select material</option>
-              <option>PLA</option>
-              <option>ABS</option>
-              <option>PETG</option>
-              <option>Resin</option>
-            </select>
-
-          </div>
-
-
-          {/* Dimensions */}
-          <div className="mt-5">
-
-            <label className="mb-2 block text-sm font-medium text-gray-700">
-              Dimensions (mm)
-            </label>
-
-            <div className="grid grid-cols-3 gap-3">
-
-              <input
-                type="number"
-                placeholder="Length"
-                className="rounded-xl border border-gray-300 px-3 py-3 outline-none focus:border-blue-500"
-              />
-
-              <input
-                type="number"
-                placeholder="Width"
-                className="rounded-xl border border-gray-300 px-3 py-3 outline-none focus:border-blue-500"
-              />
-
-              <input
-                type="number"
-                placeholder="Height"
-                className="rounded-xl border border-gray-300 px-3 py-3 outline-none focus:border-blue-500"
-              />
-
-            </div>
-
-          </div>
-
-
-          {/* Upload */}
-          <div className="mt-5">
-
-            <label className="mb-2 block text-sm font-medium text-gray-700">
-              Upload Design
-            </label>
-
-            <input
-              type="file"
-              accept=".jpg,.jpeg,.png,.stl,.obj"
-              className="w-full rounded-xl border border-dashed border-gray-300 p-4"
-            />
-
-            <p className="mt-2 text-xs text-gray-500">
-              Upload an image or 3D model of your design.
-            </p>
-
-          </div>
-
-
-          {/* Submit */}
-          <button
-            className="mt-7 w-full rounded-xl bg-blue-600 py-3 font-semibold text-white transition hover:bg-blue-700"
-          >
-            Submit Custom Request
-          </button>
-
+      {error && (
+        <div className="mb-6 rounded-lg bg-red-50 px-4 py-3 text-sm text-red-600">
+          {error}
         </div>
+      )}
 
+      <div className="grid gap-8 lg:grid-cols-3">
 
-        {/* =========================
-            SELLER SELECTION
-        ========================== */}
+        {/* Request Form */}
+        <form onSubmit={handleSubmit} className="space-y-5 rounded-2xl bg-white p-6 shadow-sm lg:col-span-2">
 
-        <div className="rounded-2xl bg-white p-5 shadow-sm sm:p-6">
+          <div>
+            <label className="mb-2 block text-sm font-medium">Reference Image (optional)</label>
+            <label className="flex h-40 cursor-pointer flex-col items-center justify-center rounded-xl border-2 border-dashed border-gray-300 bg-gray-50 hover:bg-gray-100">
+              {previewUrl ? (
+                <img src={previewUrl} alt="Reference preview" className="h-full w-full rounded-xl object-contain" />
+              ) : (
+                <>
+                  <CameraIcon className="h-10 w-10 text-gray-400" />
+                  <p className="mt-2 text-sm font-medium">Upload a reference image</p>
+                  <p className="text-xs text-gray-400">PNG, JPG or JPEG</p>
+                </>
+              )}
+              <input type="file" accept="image/*" onChange={handleFile} className="hidden" />
+            </label>
+          </div>
 
-          <h2 className="text-xl font-semibold text-gray-900">
-            Choose a Seller
-          </h2>
-
-          <p className="mt-1 text-sm text-gray-500">
-            Select who you want to print your design.
-          </p>
-
-
-          {/* Search */}
-          <div className="mt-5">
-
+          <div>
+            <label className="mb-2 block text-sm font-medium">Request Title</label>
             <input
               type="text"
-              placeholder="Search seller..."
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              className="w-full rounded-xl border border-gray-300 px-4 py-3 outline-none focus:border-blue-500"
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+              placeholder="e.g. Custom Chess Piece Set"
+              className="w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 text-sm outline-none focus:border-blue-500 focus:bg-white"
+              required
             />
-
           </div>
 
+          <div>
+            <label className="mb-2 block text-sm font-medium">Description</label>
+            <textarea
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              rows={4}
+              placeholder="Describe exactly what you'd like printed..."
+              className="w-full resize-none rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 text-sm outline-none focus:border-blue-500 focus:bg-white"
+              required
+            />
+          </div>
 
-          {/* Seller List */}
-          <div className="mt-5 space-y-3">
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="mb-2 block text-sm font-medium">Preferred Material</label>
+              <input
+                type="text"
+                value={material}
+                onChange={(e) => setMaterial(e.target.value)}
+                placeholder="e.g. PLA, Resin"
+                className="w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 text-sm outline-none focus:border-blue-500 focus:bg-white"
+              />
+            </div>
 
-            {filteredSellers.length > 0 ? (
+            <div>
+              <label className="mb-2 block text-sm font-medium">Dimensions</label>
+              <input
+                type="text"
+                value={dimensions}
+                onChange={(e) => setDimensions(e.target.value)}
+                placeholder="e.g. 10cm x 5cm x 5cm"
+                className="w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 text-sm outline-none focus:border-blue-500 focus:bg-white"
+              />
+            </div>
+          </div>
 
-              filteredSellers.map((seller) => (
+          <button
+            type="submit"
+            disabled={submitting}
+            className="w-full rounded-xl bg-blue-600 py-3.5 font-semibold text-white transition hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-60"
+          >
+            {submitting ? "Sending Request..." : "Send Request to Seller"}
+          </button>
 
-                <label
-                  key={seller.id}
-                  className={`flex cursor-pointer items-center gap-3 rounded-xl border p-4 transition ${
-                    selectedSeller === seller.name
-                      ? "border-blue-500 bg-blue-50"
-                      : "border-gray-200 hover:bg-gray-50"
-                  }`}
-                >
+        </form>
 
-                  <input
-                    type="radio"
-                    name="seller"
-                    value={seller.name}
-                    checked={selectedSeller === seller.name}
-                    onChange={() =>
-                      setSelectedSeller(seller.name)
-                    }
-                    className="h-4 w-4"
-                  />
+        {/* Seller Panel */}
+        <div className="rounded-2xl bg-white p-6 shadow-sm">
+          <h2 className="text-lg font-bold">Choose a Seller</h2>
+          <p className="mt-1 text-xs text-gray-500">
+            Sellers below currently accept custom print requests.
+          </p>
 
-
-                  <div>
-                    <h3 className="font-medium text-gray-900">
-                      {seller.name}
-                    </h3>
-
-                    <p className="text-sm text-gray-500">
-                      {seller.location}
-                    </p>
-                  </div>
-
-                </label>
-
-              ))
-
-            ) : (
-
-              <p className="py-5 text-center text-sm text-gray-500">
-                No seller found.
-              </p>
-
+          <div className="mt-4 space-y-3">
+            {loadingSellers && (
+              <p className="text-sm text-gray-400">Loading sellers...</p>
             )}
 
+            {!loadingSellers && sellers.length === 0 && (
+              <p className="text-sm text-gray-400">
+                No sellers are accepting custom orders right now.
+              </p>
+            )}
+
+            {sellers.map((seller) => (
+              <button
+                type="button"
+                key={seller._id}
+                onClick={() => setSelectedSellerId(seller._id)}
+                className={`flex w-full items-start gap-3 rounded-xl border p-3 text-left transition ${
+                  selectedSellerId === seller._id
+                    ? "border-blue-600 bg-blue-50"
+                    : "border-gray-200 hover:border-blue-300"
+                }`}
+              >
+                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-gray-100 text-gray-500">
+                  <UserIcon className="h-5 w-5" />
+                </div>
+                <div>
+                  <p className="text-sm font-semibold">
+                    {seller.sellerProfile?.shopName || seller.name}
+                  </p>
+                  {seller.sellerProfile?.bio && (
+                    <p className="mt-0.5 text-xs text-gray-500 line-clamp-2">
+                      {seller.sellerProfile.bio}
+                    </p>
+                  )}
+                </div>
+              </button>
+            ))}
           </div>
-
-
-          {/* Selected Seller */}
-          {selectedSeller && (
-            <div className="mt-5 rounded-xl bg-gray-100 p-4">
-
-              <p className="text-sm text-gray-500">
-                Selected Seller
-              </p>
-
-              <p className="mt-1 font-semibold text-gray-900">
-                {selectedSeller}
-              </p>
-
-            </div>
-          )}
-
         </div>
 
       </div>
 
-    </div>
+    </main>
   );
 }
 
