@@ -5,6 +5,7 @@ import ProductDetails from "../component/ProductDetails";
 import CategoryCart from "../component/CategoryCart";
 import api from "../axios/axios";
 import type { Product } from "../types";
+import HeroImage from "../assets/3d_printer.jpg";
 import { ArrowLeftIcon, ArrowRightIcon, SparkleIcon, PaletteIcon, BoltIcon, TruckIcon } from "../component/Icons";
 
 function Home() {
@@ -175,7 +176,7 @@ function Home() {
             <div className="relative w-full max-w-xl overflow-hidden rounded-3xl border border-white/10 shadow-2xl">
 
               <img
-                src="../public/herp-img.jpg"
+                src={HeroImage}
                 alt="3D printed product"
                 className="h-[320px] w-full object-cover sm:h-[420px] lg:h-[470px]"
               />
