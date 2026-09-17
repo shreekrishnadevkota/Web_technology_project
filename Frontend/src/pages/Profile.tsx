@@ -38,6 +38,7 @@ function Profile() {
   // Seller data
   const [myProducts, setMyProducts] = useState<Product[]>([]);
   const [receivedCustomOrders, setReceivedCustomOrders] = useState<CustomOrder[]>([]);
+  const [sellerOrders, setSellerOrders] = useState<Order[]>([]);
 
   useEffect(() => {
     api
@@ -71,6 +72,14 @@ function Profile() {
       .catch(() => setReceivedCustomOrders([]));
   };
 
+  // Orders placed by buyers that contain this seller's products
+  const loadSellerOrders = () => {
+    api
+      .get<{ orders: Order[] }>("/orders/seller")
+      .then((res) => setSellerOrders(res.data.orders))
+      .catch(() => setSellerOrders([]));
+  };
+
   // Load buyer + seller data once we know who's logged in
   useEffect(() => {
     if (!user) return;
@@ -88,6 +97,7 @@ function Profile() {
     if (user.role === "seller") {
       loadMyProducts();
       loadReceivedCustomOrders();
+      loadSellerOrders();
     }
   }, [user]);
 
@@ -137,6 +147,20 @@ function Profile() {
       setMyProducts((prev) => prev.filter((p) => p._id !== id));
     } catch {
       setMessage("Failed to remove product.");
+    }
+  };
+
+  // Seller approves an incoming order — marks it as delivered/Done
+  const approveOrder = async (orderId: string) => {
+    try {
+      const res = await api.put<{ order: Order }>(`/orders/${orderId}/status`, {
+        status: "delivered",
+      });
+      setSellerOrders((prev) =>
+        prev.map((o) => (o._id === orderId ? res.data.order : o))
+      );
+    } catch {
+      setMessage("Failed to approve order.");
     }
   };
 
@@ -420,6 +444,65 @@ function Profile() {
               </div>
             )}
 
+            {/* SELLER: Orders to Fulfill (buyer purchases containing my products) */}
+            {user.role === "seller" && (
+              <div className="rounded-2xl bg-white p-6 shadow-sm">
+                <div>
+                  <h2 className="text-xl font-bold">Orders to Fulfill</h2>
+                  <p className="mt-1 text-sm text-gray-500">
+                    Orders customers have placed for your products.
+                  </p>
+                </div>
+
+                <div className="mt-6 space-y-4">
+                  {sellerOrders.length === 0 && (
+                    <p className="text-sm text-gray-400">
+                      No orders yet.
+                    </p>
+                  )}
+
+                  {sellerOrders.map((order) => (
+                    <div
+                      key={order._id}
+                      className="flex flex-col gap-3 rounded-xl border border-gray-100 p-4 sm:flex-row sm:items-center sm:justify-between"
+                    >
+                      <div>
+                        <p className="font-semibold">
+                          {order.items.map((i) => i.name).join(", ")}
+                        </p>
+                        <p className="mt-1 text-sm text-gray-500">
+                          #{order._id.slice(-6).toUpperCase()} •{" "}
+                          {new Date(order.createdAt).toLocaleDateString()}
+                        </p>
+                      </div>
+
+                      <div className="flex items-center gap-3">
+                        <p className="font-semibold">Rs. {order.totalAmount}</p>
+
+                        {order.status === "delivered" ? (
+                          <span className="rounded-full bg-green-100 px-3 py-1 text-xs font-medium text-green-700">
+                            Done
+                          </span>
+                        ) : (
+                          <>
+                            <span className="rounded-full bg-yellow-100 px-3 py-1 text-xs font-medium capitalize text-yellow-700">
+                              {order.status}
+                            </span>
+                            <button
+                              onClick={() => approveOrder(order._id)}
+                              className="rounded-lg bg-blue-600 px-4 py-2 text-xs font-semibold text-white hover:bg-blue-700"
+                            >
+                              Approve
+                            </button>
+                          </>
+                        )}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
             {/* SELLER: Custom Print Requests Received */}
             {user.role === "seller" && (
               <div className="rounded-2xl bg-white p-6 shadow-sm">
@@ -452,47 +535,49 @@ function Profile() {
               </div>
             )}
 
-            {/* My sent custom print requests (as a customer) */}
-            <div className="rounded-2xl bg-white p-6 shadow-sm">
-              <div>
-                <h2 className="text-xl font-bold">My Custom Print Requests</h2>
-                <p className="mt-1 text-sm text-gray-500">
-                  Requests you've sent to sellers.
-                </p>
-              </div>
-
-              <div className="mt-6 space-y-4">
-                {myCustomOrders.length === 0 && (
-                  <p className="text-sm text-gray-400">
-                    You haven't sent any custom print requests.
+            {/* My sent custom print requests — buyers only */}
+            {user.role === "buyer" && (
+              <div className="rounded-2xl bg-white p-6 shadow-sm">
+                <div>
+                  <h2 className="text-xl font-bold">My Custom Print Requests</h2>
+                  <p className="mt-1 text-sm text-gray-500">
+                    Requests you've sent to sellers.
                   </p>
-                )}
+                </div>
 
-                {myCustomOrders.map((request) => (
-                  <div
-                    key={request._id}
-                    className="flex flex-col gap-2 rounded-xl border border-gray-100 p-4 sm:flex-row sm:items-center sm:justify-between"
-                  >
-                    <div>
-                      <p className="font-semibold">{request.title}</p>
-                      <p className="mt-1 text-sm text-gray-500">
-                        To: {sellerDisplayName(request.seller)}
-                      </p>
-                    </div>
-                    <div className="flex items-center gap-3">
-                      {request.quotedPrice != null && (
-                        <span className="text-sm font-semibold">
-                          Rs. {request.quotedPrice}
+                <div className="mt-6 space-y-4">
+                  {myCustomOrders.length === 0 && (
+                    <p className="text-sm text-gray-400">
+                      You haven't sent any custom print requests.
+                    </p>
+                  )}
+
+                  {myCustomOrders.map((request) => (
+                    <div
+                      key={request._id}
+                      className="flex flex-col gap-2 rounded-xl border border-gray-100 p-4 sm:flex-row sm:items-center sm:justify-between"
+                    >
+                      <div>
+                        <p className="font-semibold">{request.title}</p>
+                        <p className="mt-1 text-sm text-gray-500">
+                          To: {sellerDisplayName(request.seller)}
+                        </p>
+                      </div>
+                      <div className="flex items-center gap-3">
+                        {request.quotedPrice != null && (
+                          <span className="text-sm font-semibold">
+                            Rs. {request.quotedPrice}
+                          </span>
+                        )}
+                        <span className="rounded-full bg-gray-100 px-3 py-1 text-xs font-medium capitalize text-gray-600">
+                          {request.status.replace("_", " ")}
                         </span>
-                      )}
-                      <span className="rounded-full bg-gray-100 px-3 py-1 text-xs font-medium capitalize text-gray-600">
-                        {request.status.replace("_", " ")}
-                      </span>
+                      </div>
                     </div>
-                  </div>
-                ))}
+                  ))}
+                </div>
               </div>
-            </div>
+            )}
           </div>
         </div>
       </div>

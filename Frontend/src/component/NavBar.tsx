@@ -32,11 +32,9 @@ function NavBar() {
     { name: "About", path: "/about" },
   ];
 
-
   const getUser = async () => {
     try {
-      const response =
-        await api.get<UserResponse>("/auth/me");
+      const response = await api.get<UserResponse>("/auth/me");
 
       setUser(response.data.user);
     } catch {
@@ -44,12 +42,10 @@ function NavBar() {
     }
   };
 
-
   // Get logged-in user
   useEffect(() => {
     getUser();
   }, []);
-
 
   // ONE-CLICK ROLE SWITCH (Buyer <-> Seller)
   //
@@ -72,7 +68,9 @@ function NavBar() {
         if (error.response?.data?.needsSellerRegistration) {
           setShowSellerModal(true);
         } else {
-          setRoleError(error.response?.data?.message || "Failed to switch role.");
+          setRoleError(
+            error.response?.data?.message || "Failed to switch role.",
+          );
         }
       } else {
         setRoleError("An unexpected error occurred.");
@@ -80,8 +78,8 @@ function NavBar() {
     } finally {
       setSwitchingRole(false);
     }
+    location.reload();
   };
-
 
   const handleSellerRegistered = (role: "buyer" | "seller") => {
     if (user) {
@@ -91,22 +89,16 @@ function NavBar() {
     navigate("/ProductList");
   };
 
-
   // Search products
-  const handleSearch = (
-    e: React.FormEvent<HTMLFormElement>
-  ) => {
+  const handleSearch = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     if (!search.trim()) {
       return;
     }
 
-    navigate(
-      `/shop?search=${encodeURIComponent(search)}`
-    );
+    navigate(`/shop?search=${encodeURIComponent(search)}`);
   };
-
 
   // Logout
   const handleLogout = async () => {
@@ -119,33 +111,24 @@ function NavBar() {
     } catch {
       console.log("Logout failed");
     }
+    
   };
-
-
+  
   return (
     <nav className="sticky top-0 z-50 border-b border-gray-200 bg-white">
-
       <div className="mx-auto max-w-6xl px-4">
-
         {/* Top Navbar */}
 
         <div className="flex h-16 items-center justify-between">
-
-
           {/* Logo */}
 
-          <Link
-            to="/"
-            className="pr-6 text-xl font-bold sm:text-2xl"
-          >
+          <Link to="/" className="pr-6 text-xl font-bold sm:text-2xl">
             Print<span className="text-blue-600">Shop</span>
           </Link>
-
 
           {/* Desktop Navigation */}
 
           <div className="hidden items-center gap-6 md:flex">
-
             {navLinks.map((link) => (
               <Link
                 key={link.name}
@@ -165,25 +148,16 @@ function NavBar() {
                 Sell
               </Link>
             )}
-
           </div>
-
 
           {/* Desktop Search */}
 
-          <form
-            onSubmit={handleSearch}
-            className="hidden flex-1 px-6 lg:block"
-          >
-
+          <form onSubmit={handleSearch} className="hidden flex-1 px-6 lg:block">
             <div className="relative mx-auto max-w-sm">
-
               <input
                 type="text"
                 value={search}
-                onChange={(e) =>
-                  setSearch(e.target.value)
-                }
+                onChange={(e) => setSearch(e.target.value)}
                 placeholder="Search products..."
                 className="w-full rounded-lg border border-gray-300 px-4 py-2 pr-10 text-sm outline-none focus:border-blue-600"
               />
@@ -195,16 +169,12 @@ function NavBar() {
               >
                 <SearchIcon className="h-4 w-4" />
               </button>
-
             </div>
-
           </form>
-
 
           {/* Cart + User */}
 
           <div className="hidden items-center gap-4 md:flex">
-
             <Link
               to="/cart"
               className="flex items-center gap-1.5 text-sm font-medium hover:text-blue-600"
@@ -213,10 +183,8 @@ function NavBar() {
               Cart
             </Link>
 
-
             {user ? (
               <>
-
                 {/* One-click Buyer <-> Seller switch */}
                 <button
                   type="button"
@@ -232,8 +200,8 @@ function NavBar() {
                   {switchingRole
                     ? "Switching..."
                     : user.role === "buyer"
-                    ? "Switch to Seller"
-                    : "Switch to Buyer"}
+                      ? "Switch to Seller"
+                      : "Switch to Buyer"}
                 </button>
 
                 <Link
@@ -250,46 +218,36 @@ function NavBar() {
                 >
                   Logout
                 </button>
-
               </>
             ) : (
-
               <Link
                 to="/auth"
                 className="text-sm font-medium hover:text-blue-600"
               >
                 Login
               </Link>
-
             )}
-
           </div>
-
 
           {/* Mobile Right Section */}
 
           <div className="flex items-center gap-3 md:hidden">
-
-            <Link
-              to="/cart"
-              className="flex items-center text-sm font-medium"
-            >
+            <Link to="/cart" className="flex items-center text-sm font-medium">
               <CartIcon className="h-5 w-5" />
             </Link>
 
             <button
-              onClick={() =>
-                setMenuOpen(!menuOpen)
-              }
+              onClick={() => setMenuOpen(!menuOpen)}
               aria-label={menuOpen ? "Close menu" : "Open menu"}
             >
-              {menuOpen ? <CloseIcon className="h-6 w-6" /> : <MenuIcon className="h-6 w-6" />}
+              {menuOpen ? (
+                <CloseIcon className="h-6 w-6" />
+              ) : (
+                <MenuIcon className="h-6 w-6" />
+              )}
             </button>
-
           </div>
-
         </div>
-
 
         {/* Role switch error banner */}
         {roleError && (
@@ -298,22 +256,14 @@ function NavBar() {
           </div>
         )}
 
-
         {/* Mobile Search */}
 
-        <form
-          onSubmit={handleSearch}
-          className="pb-3 md:hidden"
-        >
-
+        <form onSubmit={handleSearch} className="pb-3 md:hidden">
           <div className="relative">
-
             <input
               type="text"
               value={search}
-              onChange={(e) =>
-                setSearch(e.target.value)
-              }
+              onChange={(e) => setSearch(e.target.value)}
               placeholder="Search products..."
               className="w-full rounded-lg border border-gray-300 px-4 py-2 pr-10 text-sm outline-none focus:border-blue-600"
             />
@@ -325,107 +275,86 @@ function NavBar() {
             >
               <SearchIcon className="h-4 w-4" />
             </button>
-
           </div>
-
         </form>
-
       </div>
-
 
       {/* Mobile Menu */}
 
       {menuOpen && (
-
         <div className="border-t border-gray-200 bg-white md:hidden">
-
           <div className="flex flex-col px-4 py-3">
-
             {navLinks.map((link) => (
-
               <Link
                 key={link.name}
                 to={link.path}
-                onClick={() =>
-                  setMenuOpen(false)
-                }
+                onClick={() => setMenuOpen(false)}
                 className="border-b border-gray-100 py-3 text-sm font-medium text-gray-700 hover:text-blue-600"
               >
                 {link.name}
               </Link>
-
             ))}
 
-            {user?.role === "seller" && (
-              <Link
-                to="/ProductList"
-                onClick={() => setMenuOpen(false)}
-                className="border-b border-gray-100 py-3 text-sm font-medium text-gray-700 hover:text-blue-600"
-              >
-                Sell
-              </Link>
-            )}
 
-
-            {/* User */}
-
-            {user ? (
-
-              <>
-                <button
-                  type="button"
-                  onClick={() => {
-                    handleSwitchRole();
-                    setMenuOpen(false);
-                  }}
-                  disabled={switchingRole}
-                  className="border-b border-gray-100 py-3 text-left text-sm font-medium text-blue-600"
-                >
-                  {switchingRole
-                    ? "Switching..."
-                    : user.role === "buyer"
-                    ? "Switch to Seller"
-                    : "Switch to Buyer"}
-                </button>
-
+            <div className=" rounded-2xl flex flex-col px-2 bg-gray-200 ">
+              {user?.role === "seller" && (
                 <Link
-                  to="/profile"
-                  onClick={() =>
-                    setMenuOpen(false)
-                  }
+                  to="/ProductList"
+                  onClick={() => setMenuOpen(false)}
                   className="border-b border-gray-100 py-3 text-sm font-medium text-gray-700 hover:text-blue-600"
                 >
-                  {user.name}
+                  Sell
                 </Link>
+              )}
 
-                <button
-                  onClick={handleLogout}
-                  className="py-3 text-left text-sm font-medium text-red-500"
+              {/* User */}
+
+              {user ? (
+                <>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      handleSwitchRole();
+                      setMenuOpen(false);
+                    }}
+                    disabled={switchingRole}
+                    className="border-b border-gray-100 py-3 text-left text-sm font-medium text-blue-600"
+                  >
+                    {switchingRole
+                      ? "Switching..."
+                      : user.role === "buyer"
+                        ? "Switch to Seller"
+                        : "Switch to Buyer"}
+                  </button>
+
+                  <Link
+                    to="/profile"
+                    onClick={() => setMenuOpen(false)}
+                    className="border-b border-gray-100 py-3 text-sm font-medium text-gray-700 hover:text-blue-600"
+                  >
+                    {user.name}
+                  </Link>
+
+                  <button
+                    onClick={handleLogout}
+                    className="py-3 text-left text-sm font-medium text-red-500"
+                  >
+                    Logout
+                  </button>
+                </>
+              ) : (
+                <Link
+                  to="/auth"
+                  onClick={() => setMenuOpen(false)}
+                  className="py-3 text-sm font-medium text-gray-700 hover:text-blue-600"
                 >
-                  Logout
-                </button>
-              </>
-
-            ) : (
-
-              <Link
-                to="/auth"
-                onClick={() =>
-                  setMenuOpen(false)
-                }
-                className="py-3 text-sm font-medium text-gray-700 hover:text-blue-600"
-              >
-                Login
-              </Link>
-
-            )}
-
+                  Login
+                </Link>
+              )}
+            </div>
           </div>
-
         </div>
-
       )}
-
 
       {/* One-time seller registration modal */}
       {showSellerModal && (
@@ -434,9 +363,11 @@ function NavBar() {
           onSuccess={handleSellerRegistered}
         />
       )}
-
     </nav>
+    
   );
+
+
 }
 
 export default NavBar;

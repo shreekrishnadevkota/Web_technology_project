@@ -85,11 +85,14 @@ function Auth() {
 
         setPassword("");
 
+
         // Go home after login
 
         setTimeout(() => {
           navigate("/");
         }, 1000);
+
+        
       }
     } catch (error: any) {
       console.log(error);
@@ -102,6 +105,7 @@ function Auth() {
     } finally {
       setLoading(false);
     }
+    
   };
 
   return (
