@@ -40,6 +40,7 @@ function App() {
           <Route path="/order" element={<Orders/>}/>
 
           <Route path="/customPrint" element={<CustomPrint/>}/>
+          <Route path="/category" element={<Categories/>}/>
           
         </Routes>
         <Footer/>
