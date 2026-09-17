@@ -4,7 +4,6 @@ import NavBar from "./component/NavBar";
 
 import Home from "./pages/Home";
 import Shop from "./pages/Shop";
-import Categories from "./pages/Categories";
 import About from "./pages/About";
 import Cart from "./pages/Cart";
 import Profile from "./pages/Profile";
@@ -40,7 +39,6 @@ function App() {
           <Route path="/order" element={<Orders/>}/>
 
           <Route path="/customPrint" element={<CustomPrint/>}/>
-          <Route path="/category" element={<Categories/>}/>
           
         </Routes>
         <Footer/>
