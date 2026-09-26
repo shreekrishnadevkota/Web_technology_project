@@ -24,7 +24,7 @@ const app = express();
 // Allowed origins list (Add your deployed Vercel frontend URL here)
 const allowedOrigins = [
   "http://localhost:5173",
-  "https://vercel.app" //actual deployed Vercel frontend URL
+  "https://sem-3-shre5.vercel.app/" //actual deployed Vercel frontend URL
 ];
 
 // Read JSON data (raised limit so a base64 product image fits in the body)
