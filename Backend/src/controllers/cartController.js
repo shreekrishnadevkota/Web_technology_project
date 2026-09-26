@@ -1,7 +1,7 @@
 import Cart from "../models/Cart.js";
 import Product from "../models/Product.js";
 
-//  the logged-in user's cart, populated
+// Return the user's existing cart, creating an empty one on first access.
 const getOrCreateCart = async (userId) => {
   let cart = await Cart.findOne({ user: userId });
 

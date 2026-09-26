@@ -14,7 +14,8 @@ export const createCustomOrder = async (req, res) => {
       });
     }
 
-    // A seller may be flipped back to "buyer" mode later, but their
+    // Role switching does not erase seller registration, so validate the
+    // persistent seller profile rather than the seller's currently active role.
     const seller = await User.findById(sellerId);
 
     if (!seller || !seller.sellerProfile?.completed) {

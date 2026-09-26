@@ -24,6 +24,8 @@ export const placeOrder = async (req, res) => {
     const orderItems = [];
     let totalAmount = 0;
 
+    // Recheck availability at checkout, then snapshot each line so later
+    // product edits do not change the buyer's order history.
     for (const item of cart.items) {
       const product = item.product;
 
@@ -50,6 +52,7 @@ export const placeOrder = async (req, res) => {
 
       totalAmount += product.price * item.quantity;
 
+      // Reserve the purchased quantity by reducing the current stock.
       product.stock -= item.quantity;
       await product.save();
     }

@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import type { ReactNode } from "react";
 import { HomeIcon, AccessoryIcon, FigureIcon, OfficeIcon, ArrowRightIcon } from "./Icons";
 
+// Present the supported catalog categories as links that pre-filter the Shop page.
 const CategoryCart = () => {
   return (
     <section className="mx-auto max-w-7xl  py-10 sm:px-8 lg:px-10">

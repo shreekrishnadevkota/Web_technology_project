@@ -18,6 +18,7 @@ function Shop() {
   const [loading, setLoading] = useState(true);
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
 
+  // Keep filters in the URL so searches can be shared and browser navigation works.
   useEffect(() => {
     setLoading(true);
 

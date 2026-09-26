@@ -1,4 +1,4 @@
-
+// Small shared button for places that need the same fixed-size primary action.
 const Btn = ({btnTitle="Button"}: {btnTitle: string}) => {
   return (
     <div>

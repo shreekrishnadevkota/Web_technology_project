@@ -78,7 +78,6 @@ function NavBar() {
     } finally {
       setSwitchingRole(false);
     }
-    location.reload();
   };
 
   const handleSellerRegistered = (role: "buyer" | "seller") => {

@@ -2,6 +2,7 @@ import User from "../models/User.js";
 
 const sellerMiddleware = async (req, res, next) => {
   try {
+    // authMiddleware must run first so the verified user ID is available here.
     const user = await User.findById(req.user.userId);
 
     if (!user) {

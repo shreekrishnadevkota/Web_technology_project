@@ -17,6 +17,7 @@ function Orders() {
   const [orders, setOrders] = useState<Order[]>([]);
   const [loading, setLoading] = useState(true);
 
+  // The authenticated API uses the login cookie to return this buyer's history.
   useEffect(() => {
     api
       .get<{ orders: Order[] }>("/orders/mine")

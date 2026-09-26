@@ -59,6 +59,7 @@ function Cart() {
 
   const items = cart?.items || [];
 
+  // Calculate the displayed subtotal from each current product price and quantity.
   const total = items.reduce(
     (sum, item) => sum + item.product.price * item.quantity,
     0

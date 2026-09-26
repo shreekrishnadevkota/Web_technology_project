@@ -63,6 +63,7 @@ export const getProducts = async (req, res) => {
       limit = 20,
     } = req.query;
 
+    // Build one MongoDB filter from the optional catalog query parameters.
     const filter = { isActive: true };
 
     if (search) {
@@ -88,6 +89,7 @@ export const getProducts = async (req, res) => {
     if (sort === "price_desc") sortOption = { price: -1 };
     if (sort === "newest") sortOption = { createdAt: -1 };
 
+    // Clamp paging inputs so clients cannot request invalid pages or huge result sets.
     const pageNum = Math.max(Number(page), 1);
     const limitNum = Math.min(Math.max(Number(limit), 1), 100);
 
