@@ -14,12 +14,18 @@ const app = express();
 // MIDDLEWARE
 
 // Allow frontend to access backend
-app.use(
-  cors({
-    origin: "http://localhost:5173",
-    credentials: true,
-  })
-);
+// app.use(
+//   cors({
+//     origin: "http://localhost:5173",
+//     credentials: true,
+//   })
+// );
+
+// Allowed origins list (Add your deployed Vercel frontend URL here)
+const allowedOrigins = [
+  "http://localhost:5173",
+  "https://vercel.app" //actual deployed Vercel frontend URL
+];
 
 // Read JSON data (raised limit so a base64 product image fits in the body)
 app.use(express.json({ limit: "10mb" }));
